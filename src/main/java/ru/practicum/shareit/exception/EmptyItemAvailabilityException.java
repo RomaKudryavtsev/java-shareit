@@ -1,9 +1,10 @@
 package ru.practicum.shareit.exception;
 
 public class EmptyItemAvailabilityException extends RuntimeException {
-    public EmptyItemAvailabilityException() {}
+    public EmptyItemAvailabilityException() {
+    }
 
-    public EmptyItemAvailabilityException (final String message) {
+    public EmptyItemAvailabilityException(final String message) {
         super(message);
     }
 }

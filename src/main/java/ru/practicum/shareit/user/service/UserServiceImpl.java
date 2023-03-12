@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void checkIfEmailIsDuplicative(String email) {
-        if(userRepo.getUserEmails().contains(email)) {
+        if (userRepo.getUserEmails().contains(email)) {
             throw new EmailAlreadyInUseException("Email already exists");
         }
     }
@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User addUser(User user) {
-        if(user.getEmail() == null) {
+        if (user.getEmail() == null) {
             throw new EmptyEmailException("Email is empty");
         }
         checkIfEmailIsDuplicative(user.getEmail());
@@ -42,11 +42,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updateUser(int userId, User user) {
         user.setId(userId);
-        if(user.getName() != null) {
+        if (user.getName() != null) {
             userRepo.updateUserName(user);
         }
-        if(user.getEmail() != null) {
-            if(!checkIfUserTriesToUpdateWithSameEmail(userId, user)) {
+        if (user.getEmail() != null) {
+            if (!checkIfUserTriesToUpdateWithSameEmail(userId, user)) {
                 checkIfEmailIsDuplicative(user.getEmail());
                 userRepo.updateUserEmail(user);
             } else {

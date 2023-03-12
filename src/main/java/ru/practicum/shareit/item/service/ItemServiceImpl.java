@@ -26,13 +26,13 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private void checkIfUserIsOwner(int ownerId, int itemId) {
-        if(itemRepo.getItemById(itemId).getOwnerId() != ownerId) {
+        if (itemRepo.getItemById(itemId).getOwnerId() != ownerId) {
             throw new NonOwnerUpdatingException("Item can be updated only by its owner");
         }
     }
 
     private void checkIfUserExists(int userId) {
-        if(userRepo.getUserById(userId) == null) {
+        if (userRepo.getUserById(userId) == null) {
             throw new UserNotFoundException("User does not exist");
         }
     }
@@ -40,13 +40,13 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto addItem(int userId, ItemDto itemDto) {
         checkIfUserExists(userId);
-        if(itemDto.getAvailable() == null) {
+        if (itemDto.getAvailable() == null) {
             throw new EmptyItemAvailabilityException("Item availability is empty");
         }
-        if(itemDto.getName() == null || itemDto.getName().isEmpty()) {
+        if (itemDto.getName() == null || itemDto.getName().isEmpty()) {
             throw new EmptyItemNameException("Item name is empty");
         }
-        if(itemDto.getDescription() == null) {
+        if (itemDto.getDescription() == null) {
             throw new EmptyItemDescriptionException("Item description is empty");
         }
         Item inputItem = ItemMapper.mapToModel(itemDto);
@@ -61,13 +61,13 @@ public class ItemServiceImpl implements ItemService {
         Item inputItem = ItemMapper.mapToModel(itemDto);
         inputItem.setId(itemId);
         inputItem.setOwnerId(ownerId);
-        if(inputItem.getAvailable() != null) {
+        if (inputItem.getAvailable() != null) {
             itemRepo.updateAvailable(inputItem);
         }
-        if(inputItem.getDescription() != null) {
+        if (inputItem.getDescription() != null) {
             itemRepo.updateDescription(inputItem);
         }
-        if(inputItem.getName() != null) {
+        if (inputItem.getName() != null) {
             itemRepo.updateName(inputItem);
         }
         return ItemMapper.mapToDto(itemRepo.getItemById(itemId));
@@ -86,7 +86,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> searchItems(String text) {
-        if(text.isEmpty()) {
+        if (text.isEmpty()) {
             return List.of();
         }
         String searchableText = text.toLowerCase();

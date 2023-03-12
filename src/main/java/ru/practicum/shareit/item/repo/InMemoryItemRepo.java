@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class InMemoryItemRepo implements ItemRepo{
+public class InMemoryItemRepo implements ItemRepo {
     private final Map<Integer, Item> itemMap = new HashMap<>();
     private int itemId = 0;
 
