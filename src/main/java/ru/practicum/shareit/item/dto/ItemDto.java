@@ -1,7 +1,20 @@
 package ru.practicum.shareit.item.dto;
 
-/**
- * TODO Sprint add-controllers.
- */
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Data;
+import lombok.experimental.FieldDefaults;
+
+@Data
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemDto {
+    int id;
+    String name;
+    String description;
+    Boolean available;
+
+    public Boolean getAvailable() {
+        return available;
+    }
 }
