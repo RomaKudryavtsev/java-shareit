@@ -12,7 +12,7 @@ import java.util.List;
 @RequestMapping(path = "/users")
 public class UserController {
     private final UserService userService;
-    private final static String ALTER_USER_PATH = "/{id}";
+    private static final String ALTER_USER_PATH = "/{id}";
 
     @Autowired
     public UserController(UserService userService) {

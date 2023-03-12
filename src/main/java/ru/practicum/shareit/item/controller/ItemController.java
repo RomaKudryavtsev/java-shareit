@@ -14,8 +14,8 @@ import java.util.List;
 @RequestMapping("/items")
 public class ItemController {
     private final ItemService itemService;
-    private final static String SPECIFIC_ITEM_PATH = "/{id}";
-    private final static String SEARCH_PATH = "/search";
+    private static final String SPECIFIC_ITEM_PATH = "/{id}";
+    private static final String SEARCH_PATH = "/search";
 
     @Autowired
     public ItemController(ItemService itemService) {
