@@ -1,5 +1,8 @@
 package ru.practicum.shareit.user.repo;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.user.model.User;
@@ -12,9 +15,11 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class InMemoryUserRepo implements UserRepo {
-    private final Map<Integer, User> userMap = new HashMap<>();
-    private int userId = 0;
+    Map<Integer, User> userMap = new HashMap<>();
+    @NonFinal
+    int userId = 0;
 
     @Override
     public User addUser(User user) {

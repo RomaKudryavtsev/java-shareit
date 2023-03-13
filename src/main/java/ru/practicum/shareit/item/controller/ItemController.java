@@ -16,6 +16,7 @@ public class ItemController {
     private final ItemService itemService;
     private static final String SPECIFIC_ITEM_PATH = "/{id}";
     private static final String SEARCH_PATH = "/search";
+    private static final String USER_HEADER = "X-Sharer-User-Id";
 
     @Autowired
     public ItemController(ItemService itemService) {
@@ -23,12 +24,12 @@ public class ItemController {
     }
 
     @PostMapping
-    public ItemDto addItem(@RequestHeader("X-Sharer-User-Id") int userId, @RequestBody ItemDto itemDto) {
+    public ItemDto addItem(@RequestHeader(USER_HEADER) int userId, @RequestBody ItemDto itemDto) {
         return itemService.addItem(userId, itemDto);
     }
 
     @PatchMapping(value = SPECIFIC_ITEM_PATH)
-    public ItemDto updateItem(@RequestHeader("X-Sharer-User-Id") int ownerId, @PathVariable("id") int itemId,
+    public ItemDto updateItem(@RequestHeader(USER_HEADER) int ownerId, @PathVariable("id") int itemId,
                               @RequestBody ItemDto itemDto) {
         return itemService.updateItem(ownerId, itemId, itemDto);
     }
@@ -39,7 +40,7 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemDto> getOwnersItems(@RequestHeader("X-Sharer-User-Id") int ownerId) {
+    public List<ItemDto> getOwnersItems(@RequestHeader(USER_HEADER) int ownerId) {
         return itemService.getAllOwnersItems(ownerId);
     }
 

@@ -1,5 +1,8 @@
 package ru.practicum.shareit.item.repo;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.item.model.Item;
@@ -11,9 +14,11 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class InMemoryItemRepo implements ItemRepo {
-    private final Map<Integer, Item> itemMap = new HashMap<>();
-    private int itemId = 0;
+    Map<Integer, Item> itemMap = new HashMap<>();
+    @NonFinal
+    int itemId = 0;
 
     @Override
     public Item addItem(Item item) {
