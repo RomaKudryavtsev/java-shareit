@@ -9,8 +9,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.projection.Booker;
 
 import javax.persistence.LockModeType;
+import java.math.BigInteger;
 import java.util.List;
 
 @Repository
@@ -24,4 +26,6 @@ public interface UserRepo extends JpaRepository<User, Long> {
     @Transactional
     @Query("update User u set u.email = ?2 where u.id = ?1")
     void updateUserEmail(Long id, String email);
+    @Query("select new ru.practicum.shareit.user.projection.Booker(it.id) from Item as it")
+    Booker findBookerById(long id);
 }

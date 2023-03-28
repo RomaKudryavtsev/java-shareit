@@ -16,7 +16,7 @@ public class ErrorHandler {
         return new ErrorResponse(e.getMessage());
     }
 
-    @ExceptionHandler({UserNotFoundException.class, NonOwnerUpdatingException.class})
+    @ExceptionHandler({UserNotFoundException.class, NonOwnerUpdatingException.class, ItemNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleUserNotFoundAndNonOwnerUpdatingExceptions(final RuntimeException e) {
         log.error(e.getMessage());

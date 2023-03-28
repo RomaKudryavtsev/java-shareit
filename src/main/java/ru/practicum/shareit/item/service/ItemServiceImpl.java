@@ -78,7 +78,8 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto getItemById(Long itemId) {
-        return ItemMapper.mapToDto(itemRepo.findById(itemId).get());
+        return ItemMapper.mapToDto(itemRepo.findById(itemId)
+                .orElseThrow(() -> {throw new ItemNotFoundException("Item does not exist");}));
     }
 
     @Override
