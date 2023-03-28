@@ -3,6 +3,7 @@ package ru.practicum.shareit.user.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.EmailAlreadyInUseException;
 import ru.practicum.shareit.exception.EmptyEmailException;
 import ru.practicum.shareit.user.model.User;
@@ -21,53 +22,58 @@ public class UserServiceImpl implements UserService {
     }
 
     private void checkIfEmailIsDuplicative(String email) {
-        if (userRepo.getUserEmails().contains(email)) {
+        if (userRepo.findAll().stream().map(User::getEmail).anyMatch(s -> s.equals(email))) {
             throw new EmailAlreadyInUseException("Email already exists");
         }
     }
 
-    private boolean checkIfUserTriesToUpdateWithSameEmail(int userId, User user) {
-        return userRepo.getUserById(userId).getEmail().equals(user.getEmail());
+    private boolean checkIfUserTriesToUpdateWithSameEmail(Long userId, User user) {
+        return userRepo.findById(userId).get().getEmail().equals(user.getEmail());
     }
 
+    @Transactional
     @Override
     public User addUser(User user) {
         if (user.getEmail() == null) {
             throw new EmptyEmailException("Email is empty");
         }
         checkIfEmailIsDuplicative(user.getEmail());
-        return userRepo.addUser(user);
+        return userRepo.save(user);
     }
 
+    @Transactional
     @Override
-    public User updateUser(int userId, User user) {
+    public User updateUser(Long userId, User user) {
         user.setId(userId);
         if (user.getName() != null) {
-            userRepo.updateUserName(user);
+            userRepo.updateUserName(user.getId(), user.getName());
+            log.info("Username updated");
         }
         if (user.getEmail() != null) {
             if (!checkIfUserTriesToUpdateWithSameEmail(userId, user)) {
                 checkIfEmailIsDuplicative(user.getEmail());
-                userRepo.updateUserEmail(user);
+                userRepo.updateUserEmail(user.getId(), user.getEmail());
+                log.info("Email updated");
             } else {
                 log.info("User {} tries to update with the same email", userId);
             }
         }
-        return userRepo.getUserById(userId);
+        log.info("Updated: {}", userRepo.findById(userId).get());
+        return userRepo.findById(userId).get();
     }
 
     @Override
-    public User getUserById(int userId) {
-        return userRepo.getUserById(userId);
+    public User getUserById(Long userId) {
+        return userRepo.findById(userId).get();
     }
 
     @Override
     public List<User> getAllUsers() {
-        return userRepo.getAllUsers();
+        return userRepo.findAll();
     }
 
     @Override
-    public void deleteUserById(int userId) {
-        userRepo.deleteUserById(userId);
+    public void deleteUserById(Long userId) {
+        userRepo.deleteById(userId);
     }
 }

@@ -24,23 +24,23 @@ public class ItemController {
     }
 
     @PostMapping
-    public ItemDto addItem(@RequestHeader(USER_HEADER) int userId, @RequestBody ItemDto itemDto) {
+    public ItemDto addItem(@RequestHeader(USER_HEADER) Long userId, @RequestBody ItemDto itemDto) {
         return itemService.addItem(userId, itemDto);
     }
 
     @PatchMapping(value = SPECIFIC_ITEM_PATH)
-    public ItemDto updateItem(@RequestHeader(USER_HEADER) int ownerId, @PathVariable("id") int itemId,
+    public ItemDto updateItem(@RequestHeader(USER_HEADER) Long ownerId, @PathVariable("id") Long itemId,
                               @RequestBody ItemDto itemDto) {
         return itemService.updateItem(ownerId, itemId, itemDto);
     }
 
     @GetMapping(SPECIFIC_ITEM_PATH)
-    public ItemDto getItemById(@PathVariable("id") int itemId) {
+    public ItemDto getItemById(@PathVariable("id") Long itemId) {
         return itemService.getItemById(itemId);
     }
 
     @GetMapping
-    public List<ItemDto> getOwnersItems(@RequestHeader(USER_HEADER) int ownerId) {
+    public List<ItemDto> getOwnersItems(@RequestHeader(USER_HEADER) Long ownerId) {
         return itemService.getAllOwnersItems(ownerId);
     }
 

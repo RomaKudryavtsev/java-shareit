@@ -14,10 +14,10 @@ public class ItemMapper {
     }
 
     public static Item mapToModel(ItemDto itemDto) {
-        return Item.builder()
-                .name(itemDto.getName())
-                .description(itemDto.getDescription())
-                .available(itemDto.getAvailable())
-                .build();
+        Item item = new Item();
+        item.setName(itemDto.getName());
+        item.setDescription(itemDto.getDescription());
+        item.setAvailable(itemDto.getAvailable());
+        return item;
     }
 }

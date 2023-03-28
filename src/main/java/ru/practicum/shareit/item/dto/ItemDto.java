@@ -9,7 +9,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemDto {
-    int id;
+    Long id;
     String name;
     String description;
     Boolean available;

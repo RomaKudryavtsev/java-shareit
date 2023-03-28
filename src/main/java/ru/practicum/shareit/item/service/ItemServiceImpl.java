@@ -3,6 +3,7 @@ package ru.practicum.shareit.item.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.*;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
@@ -25,20 +26,21 @@ public class ItemServiceImpl implements ItemService {
         this.userRepo = userRepo;
     }
 
-    private void checkIfUserIsOwner(int ownerId, int itemId) {
-        if (itemRepo.getItemById(itemId).getOwnerId() != ownerId) {
+    private void checkIfUserIsOwner(Long ownerId, Long itemId) {
+        if (!itemRepo.findById(itemId).get().getOwnerId().equals(ownerId)) {
             throw new NonOwnerUpdatingException("Item can be updated only by its owner");
         }
     }
 
-    private void checkIfUserExists(int userId) {
-        if (userRepo.getUserById(userId) == null) {
+    private void checkIfUserExists(Long userId) {
+        if (userRepo.findById(userId).isEmpty()) {
             throw new UserNotFoundException("User does not exist");
         }
     }
 
+    @Transactional
     @Override
-    public ItemDto addItem(int userId, ItemDto itemDto) {
+    public ItemDto addItem(Long userId, ItemDto itemDto) {
         checkIfUserExists(userId);
         if (itemDto.getAvailable() == null) {
             throw new EmptyItemAvailabilityException("Item availability is empty");
@@ -51,36 +53,37 @@ public class ItemServiceImpl implements ItemService {
         }
         Item inputItem = ItemMapper.mapToModel(itemDto);
         inputItem.setOwnerId(userId);
-        Item addedItem = itemRepo.addItem(inputItem);
+        Item addedItem = itemRepo.save(inputItem);
         return ItemMapper.mapToDto(addedItem);
     }
 
+    @Transactional
     @Override
-    public ItemDto updateItem(int ownerId, int itemId, ItemDto itemDto) {
+    public ItemDto updateItem(Long ownerId, Long itemId, ItemDto itemDto) {
         checkIfUserIsOwner(ownerId, itemId);
         Item inputItem = ItemMapper.mapToModel(itemDto);
         inputItem.setId(itemId);
         inputItem.setOwnerId(ownerId);
         if (inputItem.getAvailable() != null) {
-            itemRepo.updateAvailable(inputItem);
+            itemRepo.updateAvailable(inputItem.getId(), inputItem.getAvailable());
         }
         if (inputItem.getDescription() != null) {
-            itemRepo.updateDescription(inputItem);
+            itemRepo.updateDescription(inputItem.getId(), inputItem.getDescription());
         }
         if (inputItem.getName() != null) {
-            itemRepo.updateName(inputItem);
+            itemRepo.updateName(inputItem.getId(), inputItem.getName());
         }
-        return ItemMapper.mapToDto(itemRepo.getItemById(itemId));
+        return ItemMapper.mapToDto(itemRepo.findById(itemId).get());
     }
 
     @Override
-    public ItemDto getItemById(int itemId) {
-        return ItemMapper.mapToDto(itemRepo.getItemById(itemId));
+    public ItemDto getItemById(Long itemId) {
+        return ItemMapper.mapToDto(itemRepo.findById(itemId).get());
     }
 
     @Override
-    public List<ItemDto> getAllOwnersItems(int ownerId) {
-        return itemRepo.getListOfOwnersItems(ownerId).stream()
+    public List<ItemDto> getAllOwnersItems(Long ownerId) {
+        return itemRepo.findAllByOwnerId(ownerId).stream()
                 .map(ItemMapper::mapToDto).collect(Collectors.toList());
     }
 
@@ -90,7 +93,8 @@ public class ItemServiceImpl implements ItemService {
             return List.of();
         }
         String searchableText = text.toLowerCase();
-        return itemRepo.searchItems(searchableText).stream()
+        return itemRepo.findAllByDescriptionContainingIgnoreCaseOrNameContainingIgnoreCase(searchableText,
+                        searchableText).stream()
                 .map(ItemMapper::mapToDto).collect(Collectors.toList());
     }
 }

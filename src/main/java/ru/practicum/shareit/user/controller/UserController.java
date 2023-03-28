@@ -25,12 +25,12 @@ public class UserController {
     }
 
     @PatchMapping(value = ALTER_USER_PATH)
-    public User updateUser(@PathVariable("id") int userId, @Valid @RequestBody User user) {
+    public User updateUser(@PathVariable("id") Long userId, @Valid @RequestBody User user) {
         return userService.updateUser(userId, user);
     }
 
     @GetMapping(ALTER_USER_PATH)
-    public User getUserById(@PathVariable("id") int userId) {
+    public User getUserById(@PathVariable("id") Long userId) {
         return userService.getUserById(userId);
     }
 
@@ -40,7 +40,7 @@ public class UserController {
     }
 
     @DeleteMapping(value = ALTER_USER_PATH)
-    public void deleteUserById(@PathVariable("id") int userId) {
+    public void deleteUserById(@PathVariable("id") Long userId) {
         userService.deleteUserById(userId);
     }
 }
