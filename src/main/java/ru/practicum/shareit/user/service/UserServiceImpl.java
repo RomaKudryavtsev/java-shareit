@@ -3,6 +3,7 @@ package ru.practicum.shareit.user.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.EmailAlreadyInUseException;
 import ru.practicum.shareit.exception.EmptyEmailException;
@@ -58,8 +59,10 @@ public class UserServiceImpl implements UserService {
                 log.info("User {} tries to update with the same email", userId);
             }
         }
-        log.info("Updated: {}", userRepo.findById(userId).get());
-        return userRepo.findById(userId).get();
+        User userUpdated = userRepo.findById(userId).get();
+        log.info("Updated: {}", userUpdated);
+        log.info("Email updated: {}", userUpdated.getEmail());
+        return userUpdated;
     }
 
     @Override

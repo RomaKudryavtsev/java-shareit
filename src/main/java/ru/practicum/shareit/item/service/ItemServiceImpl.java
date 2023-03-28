@@ -95,6 +95,7 @@ public class ItemServiceImpl implements ItemService {
         String searchableText = text.toLowerCase();
         return itemRepo.findAllByDescriptionContainingIgnoreCaseOrNameContainingIgnoreCase(searchableText,
                         searchableText).stream()
+                .filter(Item::getAvailable)
                 .map(ItemMapper::mapToDto).collect(Collectors.toList());
     }
 }

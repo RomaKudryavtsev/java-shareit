@@ -1,6 +1,8 @@
 package ru.practicum.shareit.user.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.service.UserService;
 import ru.practicum.shareit.user.model.User;
@@ -25,6 +27,7 @@ public class UserController {
     }
 
     @PatchMapping(value = ALTER_USER_PATH)
+    @Transactional
     public User updateUser(@PathVariable("id") Long userId, @Valid @RequestBody User user) {
         return userService.updateUser(userId, user);
     }
