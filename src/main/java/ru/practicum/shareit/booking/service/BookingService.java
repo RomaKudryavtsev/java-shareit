@@ -8,4 +8,6 @@ public interface BookingService {
     BookingResponseDto addBooking (Long userId, BookingRequestDto bookingRequestDto);
 
     BookingResponseDto setBookingStatus(Long userId, Long id, Boolean approved);
+
+    BookingResponseDto getBookingById(Long userId, Long id);
 }

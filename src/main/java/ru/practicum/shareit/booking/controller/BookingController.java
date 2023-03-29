@@ -31,4 +31,10 @@ public class BookingController {
         return bookingService.setBookingStatus(userId, id, approved);
     }
 
+    @GetMapping(BOOKING_PATH)
+    public BookingResponseDto getBookingById(@RequestHeader(USER_HEADER) Long userId,
+                                             @PathVariable("bookingId") Long id) {
+        return bookingService.getBookingById(userId, id);
+    }
+
 }
