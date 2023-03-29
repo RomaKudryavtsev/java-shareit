@@ -4,12 +4,12 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BookingAddRequestDto {
+public class BookingDto {
     Long itemId;
-    Instant start;
-    Instant end;
+    LocalDateTime start;
+    LocalDateTime end;
 }

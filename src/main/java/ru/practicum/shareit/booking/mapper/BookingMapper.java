@@ -1,14 +1,15 @@
 package ru.practicum.shareit.booking.mapper;
 
-import ru.practicum.shareit.booking.dto.BookingAddRequestDto;
+import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.model.Booking;
 
+import java.time.ZoneOffset;
+
 public class BookingMapper {
-    public static Booking mapAddRequestDtoToModel(BookingAddRequestDto bookingDto) {
+    public static Booking mapDtoToModel(BookingDto bookingDto) {
         Booking booking = new Booking();
-        booking.setItemId(bookingDto.getItemId());
-        booking.setStart(bookingDto.getStart());
-        booking.setEnd(bookingDto.getEnd());
+        booking.setStart(bookingDto.getStart().toInstant(ZoneOffset.UTC));
+        booking.setEnd(bookingDto.getEnd().toInstant(ZoneOffset.UTC));
         return booking;
     }
 }

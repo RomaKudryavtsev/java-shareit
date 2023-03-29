@@ -26,4 +26,4 @@ CREATE TABLE IF NOT EXISTS bookings (
   CONSTRAINT pk_booking PRIMARY KEY (id),
   CONSTRAINT fk_bookings_to_users FOREIGN KEY(booker_id) REFERENCES users(id),
   CONSTRAINT fk_bookings_to_items FOREIGN KEY(item_id) REFERENCES items(id)
-)
+);

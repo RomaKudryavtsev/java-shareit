@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.booking.model.Booking;
 
 @Repository
-public interface BookingRepo extends JpaRepository<Booking, Long>, BookingCustomRepo {
+public interface BookingRepo extends JpaRepository<Booking, Long> {
 }

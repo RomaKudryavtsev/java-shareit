@@ -7,7 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", schema = "public")
 @Getter @Setter @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {

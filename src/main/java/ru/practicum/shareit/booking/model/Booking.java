@@ -9,7 +9,6 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
-import java.math.BigInteger;
 import java.time.Instant;
 
 @Entity
@@ -26,10 +25,10 @@ public class Booking {
     Instant end;
     @Enumerated(EnumType.STRING)
     BookingStatus status;
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
-    @JoinColumn(name = "booker_id")
-    long bookerId;
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Item.class)
-    @JoinColumn(name = "item_id")
-    Long itemId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "booker_id", referencedColumnName = "id")
+    User booker;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_id", referencedColumnName = "id")
+    Item item;
 }
