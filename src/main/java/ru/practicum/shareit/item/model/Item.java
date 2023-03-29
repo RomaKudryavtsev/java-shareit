@@ -2,8 +2,10 @@ package ru.practicum.shareit.item.model;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import ru.practicum.shareit.booking.model.Booking;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "items", schema = "public")
@@ -21,6 +23,8 @@ public class Item {
     String description;
     @Column(name = "available")
     Boolean available;
+    @OneToMany(mappedBy = "item")
+    List<Booking> bookings;
 
     public Boolean getAvailable() {
         return available;
