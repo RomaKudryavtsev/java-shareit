@@ -47,4 +47,11 @@ public class BookingController {
         return bookingService.getAllBookingsOfBookerByState(bookerId, state);
     }
 
+    @GetMapping("/owner")
+    public List<BookingResponseDto> getAllBookingsOfOwnerByState(@RequestHeader(USER_HEADER) Long ownerId,
+                                                                  @RequestParam(defaultValue = "ALL", required = false)
+                                                                  String state) {
+        return bookingService.getAllBookingsOfOwnerByState(ownerId, state);
+    }
+
 }

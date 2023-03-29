@@ -53,6 +53,13 @@ public class ErrorHandler {
         return new ErrorResponse(e.getMessage());
     }
 
+    @ExceptionHandler({UpdateStatusAfterApprovalException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleUpdateAfterApprovalException(final UpdateStatusAfterApprovalException e) {
+        log.error(e.getMessage());
+        return new ErrorResponse(e.getMessage());
+    }
+
     @ExceptionHandler({ItemNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleItemNotFoundException(final ItemNotFoundException e) {
@@ -77,6 +84,13 @@ public class ErrorHandler {
     @ExceptionHandler({BookingNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleBookingNotFoundException(final BookingNotFoundException e) {
+        log.error(e.getMessage());
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler({BookerIsOwnerException.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleBookerIsOwnerException(final BookerIsOwnerException e) {
         log.error(e.getMessage());
         return new ErrorResponse(e.getMessage());
     }

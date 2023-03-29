@@ -11,12 +11,15 @@ import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repo.BookingRepo;
 import ru.practicum.shareit.exception.*;
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repo.ItemRepo;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repo.UserRepo;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -34,6 +37,10 @@ public class BookingServiceImpl implements BookingService {
     private final Supplier<UserNotFoundException> userNotFound =
             () -> {
                 throw new UserNotFoundException("User does not exist");
+            };
+    private final Supplier<ItemNotFoundException> itemNotFound =
+            () -> {
+                throw new ItemNotFoundException("Item does not exist");
             };
 
     @Autowired
@@ -64,6 +71,12 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
+    private void checkIfStatusUpdateIsBeforeApproval(long id) {
+        if(!bookingRepo.findById(id).orElseThrow(bookingNotFound).getStatus().equals(BookingStatus.WAITING)) {
+            throw new UpdateStatusAfterApprovalException("Booking status may not be changed after approval");
+        }
+    }
+
     private void checkIfBookerOrOwnerIsRequesting(Long userId, Long id) {
         Long ownerId = bookingRepo.findById(id)
                 .orElseThrow(bookingNotFound)
@@ -76,16 +89,35 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
+    private void checkIfOwnerExists(Long ownerId) {
+        if(userRepo.findById(ownerId).isEmpty()) {
+            throw new UserNotFoundException("User does not exist");
+        }
+    }
+
+    private void checkIfBookerIsNotOwner(Long userId, Long itemId) {
+        if(userId.equals(itemRepo.findById(itemId).orElseThrow(itemNotFound).getOwnerId())) {
+            throw new BookerIsOwnerException("Owner may not book his own item");
+        }
+    }
+
+    private BookingStatus parseStatus(String state) {
+        try {
+            return BookingStatus.valueOf(state);
+        } catch (IllegalArgumentException e) {
+            throw new WrongDatesException(String.format("Unknown state: %s", state));
+        }
+    }
+
     @Transactional
     @Override
     public BookingResponseDto addBooking(Long userId, BookingRequestDto bookingRequestDto) {
         checkIfItemIsAvailable(bookingRequestDto.getItemId());
         checkStartAndEnd(bookingRequestDto.getStart(), bookingRequestDto.getEnd());
+        checkIfBookerIsNotOwner(userId, bookingRequestDto.getItemId());
         Booking newBooking = BookingMapper.mapDtoToModel(bookingRequestDto);
         newBooking.setItem(itemRepo.findById(bookingRequestDto.getItemId())
-                .orElseThrow(() -> {
-                    throw new ItemNotFoundException("Item does not exist");
-                }));
+                .orElseThrow(itemNotFound));
         newBooking.setBooker(userRepo.findById(userId)
                 .orElseThrow(userNotFound));
         newBooking.setStatus(BookingStatus.WAITING);
@@ -97,6 +129,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public BookingResponseDto setBookingStatus(Long userId, Long id, Boolean approved) {
         checkIfOwnerIsApproving(userId, id);
+        checkIfStatusUpdateIsBeforeApproval(id);
         if (approved) {
             bookingRepo.updateStatus(id, BookingStatus.APPROVED);
         } else {
@@ -114,12 +147,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<BookingResponseDto> getAllBookingsOfBookerByState(Long bookerId, String state) {
-        BookingStatus requestedStatus;
-        try {
-            requestedStatus = BookingStatus.valueOf(state);
-        } catch (IllegalArgumentException e) {
-            throw new WrongDatesException(String.format("Unknown state: %s", state));
-        }
+        BookingStatus requestedStatus = parseStatus(state);
         Instant now = Instant.now();
         User booker = userRepo.findById(bookerId).orElseThrow(userNotFound);
         switch(requestedStatus) {
@@ -141,6 +169,49 @@ public class BookingServiceImpl implements BookingService {
             default:
                 return bookingRepo.findAllByBookerAndStatusOrderByStartDesc(booker, requestedStatus).stream()
                         .map(BookingMapper::mapModelToDto).collect(Collectors.toList());
+        }
+    }
+
+    @Override
+    public List<BookingResponseDto> getAllBookingsOfOwnerByState(Long ownerId, String state) {
+        checkIfOwnerExists(ownerId);
+        BookingStatus requestedStatus = parseStatus(state);
+        Instant now = Instant.now();
+        List<Item> ownersItems = itemRepo.findAllByOwnerId(ownerId);
+        switch(requestedStatus) {
+            case ALL:
+                return ownersItems.stream().map(bookingRepo::findAllByItem)
+                        .flatMap(Collection::stream)
+                        .sorted(Comparator.comparing(Booking::getStart).reversed())
+                        .map(BookingMapper::mapModelToDto)
+                        .collect(Collectors.toList());
+            case CURRENT:
+                return ownersItems.stream().map(bookingRepo::findAllByItem)
+                        .flatMap(Collection::stream)
+                        .filter(b -> b.getStart().isBefore(now) && b.getEnd().isAfter(now))
+                        .sorted(Comparator.comparing(Booking::getStart).reversed())
+                        .map(BookingMapper::mapModelToDto)
+                        .collect(Collectors.toList());
+            case PAST:
+                return ownersItems.stream().map(bookingRepo::findAllByItem)
+                        .flatMap(Collection::stream)
+                        .filter(b -> b.getEnd().isBefore(now))
+                        .sorted(Comparator.comparing(Booking::getStart).reversed())
+                        .map(BookingMapper::mapModelToDto)
+                        .collect(Collectors.toList());
+            case FUTURE:
+                return ownersItems.stream().map(bookingRepo::findAllByItem)
+                        .flatMap(Collection::stream)
+                        .filter(b -> b.getStart().isAfter(now))
+                        .sorted(Comparator.comparing(Booking::getStart).reversed())
+                        .map(BookingMapper::mapModelToDto)
+                        .collect(Collectors.toList());
+            default:
+                return ownersItems.stream().map(item -> bookingRepo.findAllByItemAndStatus(item, requestedStatus))
+                        .flatMap(Collection::stream)
+                        .sorted(Comparator.comparing(Booking::getStart).reversed())
+                        .map(BookingMapper::mapModelToDto)
+                        .collect(Collectors.toList());
         }
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.Instant;
@@ -22,4 +23,8 @@ public interface BookingRepo extends JpaRepository<Booking, Long> {
     List<Booking> findAllByBookerOrderByStartDesc(User booker);
 
     List<Booking> findAllByBookerAndStatusOrderByStartDesc(User booker, BookingStatus status);
+
+    List<Booking> findAllByItem(Item item);
+
+    List<Booking> findAllByItemAndStatus(Item item, BookingStatus status);
 }
