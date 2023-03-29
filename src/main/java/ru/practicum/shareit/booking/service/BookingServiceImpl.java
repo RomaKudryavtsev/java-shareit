@@ -3,16 +3,14 @@ package ru.practicum.shareit.booking.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.booking.dto.BookingResponseDto;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repo.BookingRepo;
-import ru.practicum.shareit.exception.ItemNotFoundException;
-import ru.practicum.shareit.exception.ItemUnavailableException;
-import ru.practicum.shareit.exception.UserNotFoundException;
-import ru.practicum.shareit.exception.WrongDatesException;
+import ru.practicum.shareit.exception.*;
 import ru.practicum.shareit.item.repo.ItemRepo;
 import ru.practicum.shareit.user.repo.UserRepo;
 
@@ -49,6 +47,14 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
+    private void checkIfOwnerIsApproving(Long userId, Long id) {
+        if(!bookingRepo.findById(id).orElseThrow(() -> {throw new BookingNotFoundException("Booking does not exists");})
+                .getItem().getOwnerId().equals(userId)) {
+            throw new NonOwnerUpdatingException("Booking may be approved only by the owner");
+        }
+    }
+
+    @Transactional
     @Override
     public BookingResponseDto addBooking(Long userId, BookingRequestDto bookingRequestDto) {
         checkIfItemIsAvailable(bookingRequestDto.getItemId());
@@ -61,5 +67,20 @@ public class BookingServiceImpl implements BookingService {
         newBooking.setStatus(BookingStatus.WAITING);
         Booking addedBooking = bookingRepo.save(newBooking);
         return BookingMapper.mapModelToDto(addedBooking);
+    }
+
+    @Transactional
+    @Override
+    public BookingResponseDto setBookingStatus(Long userId, Long id, Boolean approved) {
+        checkIfOwnerIsApproving(userId, id);
+        Booking bookingToBeUpdated = bookingRepo.findById(id)
+                .orElseThrow(() -> {throw new BookingNotFoundException("Booking does not exist");});
+        if(approved) {
+            bookingToBeUpdated.setStatus(BookingStatus.APPROVED);
+        } else {
+            bookingToBeUpdated.setStatus(BookingStatus.REJECTED);
+        }
+        Booking bookingUpdated = bookingRepo.save(bookingToBeUpdated);
+        return BookingMapper.mapModelToDto(bookingUpdated);
     }
 }

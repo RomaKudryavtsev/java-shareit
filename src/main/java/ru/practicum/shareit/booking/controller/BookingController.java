@@ -12,6 +12,7 @@ import ru.practicum.shareit.booking.service.BookingService;
 public class BookingController {
     private final BookingService bookingService;
     private static final String USER_HEADER = "X-Sharer-User-Id";
+    private static final String BOOKING_PATH = "/{bookingId}";
 
     @Autowired
     public BookingController (BookingService bookingService) {
@@ -23,4 +24,11 @@ public class BookingController {
                                          @RequestBody BookingRequestDto bookingRequestDto) {
         return bookingService.addBooking(userId, bookingRequestDto);
     }
+
+    @PatchMapping(value = BOOKING_PATH)
+    public BookingResponseDto setBookingStatus(@RequestHeader(USER_HEADER) Long userId,
+                                               @PathVariable("bookingId") Long id, @RequestParam Boolean approved) {
+        return bookingService.setBookingStatus(userId, id, approved);
+    }
+
 }

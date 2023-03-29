@@ -73,6 +73,14 @@ public class ErrorHandler {
         log.error(e.getMessage());
         return new ErrorResponse(e.getMessage());
     }
+
+    @ExceptionHandler({BookingNotFoundException.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleBookingNotFoundException(final BookingNotFoundException e) {
+        log.error(e.getMessage());
+        return new ErrorResponse(e.getMessage());
+    }
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handleUniqueConstraintViolation(final DataIntegrityViolationException e) {
