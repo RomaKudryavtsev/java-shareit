@@ -10,4 +10,8 @@ import ru.practicum.shareit.booking.model.BookingStatus;
 
 @Repository
 public interface BookingRepo extends JpaRepository<Booking, Long> {
+    @Modifying(clearAutomatically = true)
+    @Transactional
+    @Query("update Booking b set b.status = ?2 where b.id = ?1")
+    void updateStatus(Long id, BookingStatus status);
 }

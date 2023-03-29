@@ -73,14 +73,12 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public BookingResponseDto setBookingStatus(Long userId, Long id, Boolean approved) {
         checkIfOwnerIsApproving(userId, id);
-        Booking bookingToBeUpdated = bookingRepo.findById(id)
-                .orElseThrow(() -> {throw new BookingNotFoundException("Booking does not exist");});
         if(approved) {
-            bookingToBeUpdated.setStatus(BookingStatus.APPROVED);
+            bookingRepo.updateStatus(id, BookingStatus.APPROVED);
         } else {
-            bookingToBeUpdated.setStatus(BookingStatus.REJECTED);
+            bookingRepo.updateStatus(id, BookingStatus.REJECTED);
         }
-        Booking bookingUpdated = bookingRepo.save(bookingToBeUpdated);
+        Booking bookingUpdated = bookingRepo.findById(id).orElseThrow();
         return BookingMapper.mapModelToDto(bookingUpdated);
     }
 }
