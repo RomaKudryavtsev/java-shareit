@@ -84,9 +84,15 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handleUniqueConstraintViolation(final DataIntegrityViolationException e) {
-            log.error(e.getMessage());
-            return new ErrorResponse(e.getMessage());
+        log.error(e.getMessage());
+        return new ErrorResponse(e.getMessage());
+    }
 
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleWrongStatusException(final WrongStatusException e) {
+        log.error(e.getMessage());
+        return new ErrorResponse(e.getMessage());
     }
 
     @ExceptionHandler

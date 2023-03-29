@@ -5,7 +5,10 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.booking.dto.BookingResponseDto;
 import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.service.BookingService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/bookings")
@@ -15,7 +18,7 @@ public class BookingController {
     private static final String BOOKING_PATH = "/{bookingId}";
 
     @Autowired
-    public BookingController (BookingService bookingService) {
+    public BookingController(BookingService bookingService) {
         this.bookingService = bookingService;
     }
 
@@ -35,6 +38,13 @@ public class BookingController {
     public BookingResponseDto getBookingById(@RequestHeader(USER_HEADER) Long userId,
                                              @PathVariable("bookingId") Long id) {
         return bookingService.getBookingById(userId, id);
+    }
+
+    @GetMapping
+    public List<BookingResponseDto> getAllBookingsOfBookerByState(@RequestHeader(USER_HEADER) Long bookerId,
+                                                                  @RequestParam(defaultValue = "ALL", required = false)
+                                                                  String state) {
+        return bookingService.getAllBookingsOfBookerByState(bookerId, state);
     }
 
 }
