@@ -27,14 +27,28 @@ public class ErrorHandler {
 
     @ExceptionHandler({EmptyItemDescriptionException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleEmptyItemDescriptionExceptions(final EmptyItemDescriptionException e) {
+    public ErrorResponse handleEmptyItemDescriptionException(final EmptyItemDescriptionException e) {
         log.error(e.getMessage());
         return new ErrorResponse(e.getMessage());
     }
 
     @ExceptionHandler({EmptyItemNameException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleEmptyItemNameExceptions(final EmptyItemNameException e) {
+    public ErrorResponse handleEmptyItemNameException(final EmptyItemNameException e) {
+        log.error(e.getMessage());
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler({ItemUnavailableException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handeItemUnavailableException(final ItemUnavailableException e) {
+        log.error(e.getMessage());
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler({WrongDatesException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleWrongDatesException(final WrongDatesException e) {
         log.error(e.getMessage());
         return new ErrorResponse(e.getMessage());
     }
