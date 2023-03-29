@@ -27,7 +27,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private void checkIfUserIsOwner(Long ownerId, Long itemId) {
-        if (!itemRepo.findById(itemId).get().getOwnerId().equals(ownerId)) {
+        if (!itemRepo.findById(itemId).orElseThrow(() -> {throw new ItemNotFoundException("Item does not exist");})
+                .getOwnerId().equals(ownerId)) {
             throw new NonOwnerUpdatingException("Item can be updated only by its owner");
         }
     }
@@ -41,7 +42,6 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     @Override
     public ItemDto addItem(Long userId, ItemDto itemDto) {
-        checkIfUserExists(userId);
         if (itemDto.getAvailable() == null) {
             throw new EmptyItemAvailabilityException("Item availability is empty");
         }
@@ -51,6 +51,7 @@ public class ItemServiceImpl implements ItemService {
         if (itemDto.getDescription() == null) {
             throw new EmptyItemDescriptionException("Item description is empty");
         }
+        checkIfUserExists(userId);
         Item inputItem = ItemMapper.mapToModel(itemDto);
         inputItem.setOwnerId(userId);
         Item addedItem = itemRepo.save(inputItem);
@@ -73,7 +74,8 @@ public class ItemServiceImpl implements ItemService {
         if (inputItem.getName() != null) {
             itemRepo.updateName(inputItem.getId(), inputItem.getName());
         }
-        return ItemMapper.mapToDto(itemRepo.findById(itemId).get());
+        return ItemMapper.mapToDto(itemRepo.findById(itemId)
+                .orElseThrow(() -> {throw new ItemNotFoundException("Item does not exist");}));
     }
 
     @Override
