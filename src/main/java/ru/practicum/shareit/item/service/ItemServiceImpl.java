@@ -8,9 +8,11 @@ import ru.practicum.shareit.exception.*;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.projection.ItemWithLastAndNextBooking;
 import ru.practicum.shareit.item.repo.ItemRepo;
 import ru.practicum.shareit.user.repo.UserRepo;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -79,15 +81,22 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto getItemById(Long itemId) {
-        return ItemMapper.mapToDto(itemRepo.findById(itemId)
-                .orElseThrow(() -> {throw new ItemNotFoundException("Item does not exist");}));
+    public ItemWithLastAndNextBooking getItemById(Long userId, Long itemId) {
+        boolean isOwner;
+        try {
+            checkIfUserIsOwner(userId, itemId);
+            isOwner = true;
+        } catch (NonOwnerUpdatingException e) {
+            isOwner = false;
+        }
+        Instant now = Instant.now();
+        return itemRepo.findItemWithLastAndNextBooking(itemId, now, isOwner);
     }
 
     @Override
-    public List<ItemDto> getAllOwnersItems(Long ownerId) {
-        return itemRepo.findAllByOwnerId(ownerId).stream()
-                .map(ItemMapper::mapToDto).collect(Collectors.toList());
+    public List<ItemWithLastAndNextBooking> getAllOwnersItems(Long ownerId) {
+        Instant now = Instant.now();
+        return itemRepo.findAllWithLastAndNextBooking(ownerId, now);
     }
 
     @Override

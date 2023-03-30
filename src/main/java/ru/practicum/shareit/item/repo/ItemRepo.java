@@ -10,7 +10,7 @@ import ru.practicum.shareit.item.model.Item;
 import java.util.List;
 
 @Repository
-public interface ItemRepo extends JpaRepository<Item, Long> {
+public interface ItemRepo extends JpaRepository<Item, Long>, ItemRepoCustom {
     List<Item> findAllByOwnerId(Long ownerId);
 
     @Modifying(clearAutomatically = true)

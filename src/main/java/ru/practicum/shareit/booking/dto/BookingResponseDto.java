@@ -6,8 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.booking.model.BookingStatus;
-import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.item.projection.ItemShort;
+import ru.practicum.shareit.user.projection.UserShort;
 
 import java.time.LocalDateTime;
 
@@ -20,7 +20,7 @@ public class BookingResponseDto {
     LocalDateTime end;
     BookingStatus status;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    User booker;
+    UserShort booker;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    Item item;
+    ItemShort item;
 }

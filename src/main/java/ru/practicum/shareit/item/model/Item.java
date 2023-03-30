@@ -10,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "items", schema = "public")
-@Getter @Setter @ToString
+@Getter @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
@@ -33,7 +33,7 @@ public class Item {
             mappedBy = "item",
             fetch = FetchType.EAGER
     )
-    @JsonIdentityReference(alwaysAsId = true)
+    @JsonManagedReference
     private List<Booking> bookings;
 
     public Boolean getAvailable() {

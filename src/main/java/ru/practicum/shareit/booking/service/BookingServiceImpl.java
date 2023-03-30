@@ -9,7 +9,7 @@ import ru.practicum.shareit.booking.dto.BookingResponseDto;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
-import ru.practicum.shareit.booking.projection.BookingFull;
+import ru.practicum.shareit.booking.projection.BookingShort;
 import ru.practicum.shareit.booking.repo.BookingRepo;
 import ru.practicum.shareit.exception.*;
 import ru.practicum.shareit.item.repo.ItemRepo;
@@ -35,11 +35,11 @@ public class BookingServiceImpl implements BookingService {
             () -> {throw new UserNotFoundException("User does not exist");};
     private final Supplier<ItemNotFoundException> itemNotFoundSupplier =
             () -> {throw new ItemNotFoundException("Item does not exist");};
-    private final Function<Instant, Predicate<Booking>> currentBookingsFunction = now ->
+    private final Function<Instant, Predicate<BookingShort>> currentBookingsFunction = now ->
             b -> b.getStart().isBefore(now) && b.getEnd().isAfter(now);
-    private final Function<Instant, Predicate<Booking>> pastBookingsFunction = now ->
+    private final Function<Instant, Predicate<BookingShort>> pastBookingsFunction = now ->
             b -> b.getEnd().isBefore(now);
-    private final Function<Instant, Predicate<Booking>> futureBookingsFunction = now ->
+    private final Function<Instant, Predicate<BookingShort>> futureBookingsFunction = now ->
             b -> b.getStart().isAfter(now);
 
 
@@ -95,6 +95,12 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
+    private void checkIfBookingExists(Long bookingId) {
+        if(bookingRepo.findById(bookingId).isEmpty()) {
+            throw new BookingNotFoundException("Booking does not exist");
+        }
+    }
+
     private void checkIfBookerIsNotOwner(Long userId, Long itemId) {
         if (userId.equals(itemRepo.findById(itemId).orElseThrow(itemNotFoundSupplier).getOwnerId())) {
             throw new BookerIsOwnerException("Owner may not book his own item");
@@ -142,7 +148,8 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public BookingResponseDto getBookingById(Long userId, Long id) {
         checkIfBookerOrOwnerIsRequesting(userId, id);
-        return BookingMapper.mapModelToDto(bookingRepo.findById(id).orElseThrow(bookingNotFoundSupplier));
+        checkIfBookingExists(id);
+        return BookingMapper.mapProjectionToDto(bookingRepo.findBookingShortByBookingId(id));
     }
 
     @Override
@@ -153,22 +160,22 @@ public class BookingServiceImpl implements BookingService {
         switch (requestedStatus) {
             case ALL:
                 return bookingRepo.findAllByBookerIdOrderByStartDesc(bookerId).stream()
-                        .map(BookingMapper::mapModelToDto).collect(Collectors.toList());
+                        .map(BookingMapper::mapProjectionToDto).collect(Collectors.toList());
             case CURRENT:
                 return bookingRepo.findAllByBookerIdOrderByStartDesc(bookerId).stream()
                         .filter(currentBookingsFunction.apply(now))
-                        .map(BookingMapper::mapModelToDto).collect(Collectors.toList());
+                        .map(BookingMapper::mapProjectionToDto).collect(Collectors.toList());
             case PAST:
                 return bookingRepo.findAllByBookerIdOrderByStartDesc(bookerId).stream()
                         .filter(pastBookingsFunction.apply(now))
-                        .map(BookingMapper::mapModelToDto).collect(Collectors.toList());
+                        .map(BookingMapper::mapProjectionToDto).collect(Collectors.toList());
             case FUTURE:
                 return bookingRepo.findAllByBookerIdOrderByStartDesc(bookerId).stream()
                         .filter(futureBookingsFunction.apply(now))
-                        .map(BookingMapper::mapModelToDto).collect(Collectors.toList());
+                        .map(BookingMapper::mapProjectionToDto).collect(Collectors.toList());
             default:
                 return bookingRepo.findAllByBookerIdAndStatusOrderByStartDesc(bookerId, requestedStatus).stream()
-                        .map(BookingMapper::mapModelToDto).collect(Collectors.toList());
+                        .map(BookingMapper::mapProjectionToDto).collect(Collectors.toList());
         }
     }
 
@@ -180,22 +187,22 @@ public class BookingServiceImpl implements BookingService {
         switch (requestedStatus) {
             case ALL:
                 return bookingRepo.findAllByOwnerIdOrderByStartDesc(ownerId).stream()
-                        .map(BookingMapper::mapModelToDto).collect(Collectors.toList());
+                        .map(BookingMapper::mapProjectionToDto).collect(Collectors.toList());
             case CURRENT:
                 return bookingRepo.findAllByOwnerIdOrderByStartDesc(ownerId).stream()
                         .filter(currentBookingsFunction.apply(now))
-                        .map(BookingMapper::mapModelToDto).collect(Collectors.toList());
+                        .map(BookingMapper::mapProjectionToDto).collect(Collectors.toList());
             case PAST:
                 return bookingRepo.findAllByOwnerIdOrderByStartDesc(ownerId).stream()
                         .filter(pastBookingsFunction.apply(now))
-                        .map(BookingMapper::mapModelToDto).collect(Collectors.toList());
+                        .map(BookingMapper::mapProjectionToDto).collect(Collectors.toList());
             case FUTURE:
                 return bookingRepo.findAllByOwnerIdOrderByStartDesc(ownerId).stream()
                         .filter(futureBookingsFunction.apply(now))
-                        .map(BookingMapper::mapModelToDto).collect(Collectors.toList());
+                        .map(BookingMapper::mapProjectionToDto).collect(Collectors.toList());
             default:
                 return bookingRepo.findAllByOwnerIdAndStatusOrderByStartDesc(ownerId, requestedStatus).stream()
-                        .map(BookingMapper::mapModelToDto).collect(Collectors.toList());
+                        .map(BookingMapper::mapProjectionToDto).collect(Collectors.toList());
         }
     }
 }

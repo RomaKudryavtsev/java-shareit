@@ -3,6 +3,7 @@ package ru.practicum.shareit.item.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.projection.ItemWithLastAndNextBooking;
 import ru.practicum.shareit.item.service.ItemService;
 
 import java.util.List;
@@ -35,12 +36,12 @@ public class ItemController {
     }
 
     @GetMapping(SPECIFIC_ITEM_PATH)
-    public ItemDto getItemById(@PathVariable("id") Long itemId) {
-        return itemService.getItemById(itemId);
+    public ItemWithLastAndNextBooking getItemById(@RequestHeader(USER_HEADER) Long userId, @PathVariable("id") Long itemId) {
+        return itemService.getItemById(userId, itemId);
     }
 
     @GetMapping
-    public List<ItemDto> getOwnersItems(@RequestHeader(USER_HEADER) Long ownerId) {
+    public List<ItemWithLastAndNextBooking> getOwnersItems(@RequestHeader(USER_HEADER) Long ownerId) {
         return itemService.getAllOwnersItems(ownerId);
     }
 
