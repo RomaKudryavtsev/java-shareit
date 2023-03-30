@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS comments (
   text VARCHAR(500) NOT NULL,
   author_id BIGINT NOT NULL,
   item_id BIGINT NOT NULL,
+  created timestamp,
   CONSTRAINT pk_comment PRIMARY KEY (id),
   CONSTRAINT fk_comments_to_users FOREIGN KEY(author_id) REFERENCES users(id),
   CONSTRAINT fk_comments_to_items FOREIGN KEY(item_id) REFERENCES items(id)
