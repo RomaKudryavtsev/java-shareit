@@ -1,6 +1,6 @@
 package ru.practicum.shareit.item.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.booking.model.Booking;
@@ -12,6 +12,9 @@ import java.util.List;
 @Table(name = "items", schema = "public")
 @Getter @Setter @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +33,7 @@ public class Item {
             mappedBy = "item",
             fetch = FetchType.EAGER
     )
-    @JsonIgnore
+    @JsonIdentityReference(alwaysAsId = true)
     private List<Booking> bookings;
 
     public Boolean getAvailable() {

@@ -1,5 +1,9 @@
 package ru.practicum.shareit.booking.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.item.model.Item;
@@ -13,6 +17,9 @@ import java.time.Instant;
 @Table(name = "bookings")
 @Getter @Setter @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,5 +37,6 @@ public class Booking {
     User booker;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id", referencedColumnName = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     Item item;
 }
