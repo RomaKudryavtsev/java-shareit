@@ -36,6 +36,14 @@ public class Item {
     @JsonManagedReference
     private List<Booking> bookings;
 
+    @OneToMany(
+            targetEntity = Comment.class,
+            mappedBy = "item",
+            fetch = FetchType.EAGER
+    )
+    @JsonManagedReference
+    private List<Comment> comments;
+
     public Boolean getAvailable() {
         return available;
     }
