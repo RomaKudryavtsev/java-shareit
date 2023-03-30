@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.booking.model.Booking;
@@ -23,6 +24,14 @@ public class Item {
     String description;
     @Column(name = "available")
     Boolean available;
+
+    @OneToMany(
+            targetEntity = Booking.class,
+            mappedBy = "item",
+            fetch = FetchType.EAGER
+    )
+    @JsonIgnore
+    private List<Booking> bookings;
 
     public Boolean getAvailable() {
         return available;
