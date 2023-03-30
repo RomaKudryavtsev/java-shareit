@@ -23,8 +23,6 @@ public class Item {
     String description;
     @Column(name = "available")
     Boolean available;
-    @OneToMany(mappedBy = "item")
-    List<Booking> bookings;
 
     public Boolean getAvailable() {
         return available;

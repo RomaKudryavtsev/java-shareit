@@ -2,9 +2,11 @@ package ru.practicum.shareit.user.model;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import ru.practicum.shareit.booking.model.Booking;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import java.util.List;
 
 @Entity
 @Table(name = "users", schema = "public",
