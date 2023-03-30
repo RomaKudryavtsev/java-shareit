@@ -20,19 +20,19 @@ public interface BookingRepo extends JpaRepository<Booking, Long> {
     @Query("update Booking b set b.status = ?2 where b.id = ?1")
     void updateStatus(Long id, BookingStatus status);
 
-    @Query("select new ru.practicum.shareit.booking.projection.BookingFull(b.id, b.start, b.end, b.status, b.booker, b.item) " +
-            "from Booking as b join b.booker join b.item where b.booker.id = ?1 order by b.start desc")
-    List<BookingFull> findAllByBookerIdOrderByStartDesc(Long bookerId);
+    @Query("select b " +
+            "from Booking as b join fetch b.booker join fetch b.item where b.booker.id = ?1 order by b.start desc")
+    List<Booking> findAllByBookerIdOrderByStartDesc(Long bookerId);
 
-    @Query("select new ru.practicum.shareit.booking.projection.BookingFull(b.id, b.start, b.end, b.status, b.booker, b.item) " +
+    @Query("select b " +
             "from Booking as b join b.booker join b.item where b.status = ?2 and b.booker.id = ?1 order by b.start desc")
-    List<BookingFull> findAllByBookerIdAndStatusOrderByStartDesc(Long bookerId, BookingStatus status);
+    List<Booking> findAllByBookerIdAndStatusOrderByStartDesc(Long bookerId, BookingStatus status);
 
-    @Query("select new ru.practicum.shareit.booking.projection.BookingFull(b.id, b.start, b.end, b.status, b.booker, b.item) " +
+    @Query("select b " +
             "from Booking as b join b.booker join b.item where b.item.ownerId = ?1 order by b.start desc")
-    List<BookingFull> findAllByOwnerIdOrderByStartDesc(Long ownerId);
+    List<Booking> findAllByOwnerIdOrderByStartDesc(Long ownerId);
 
-    @Query("select new ru.practicum.shareit.booking.projection.BookingFull(b.id, b.start, b.end, b.status, b.booker, b.item) " +
+    @Query("select b " +
             "from Booking as b join b.booker join b.item where b.status = ?2 and b.item.ownerId = ?1 order by b.start desc")
-    List<BookingFull> findAllByOwnerIdAndStatusOrderByStartDesc(Long ownerId, BookingStatus status);
+    List<Booking> findAllByOwnerIdAndStatusOrderByStartDesc(Long ownerId, BookingStatus status);
 }

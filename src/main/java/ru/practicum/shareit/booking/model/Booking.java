@@ -32,10 +32,10 @@ public class Booking {
     Instant end;
     @Enumerated(EnumType.STRING)
     BookingStatus status;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "booker_id", referencedColumnName = "id")
     User booker;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "item_id", referencedColumnName = "id")
     @JsonIdentityReference(alwaysAsId = true)
     Item item;
