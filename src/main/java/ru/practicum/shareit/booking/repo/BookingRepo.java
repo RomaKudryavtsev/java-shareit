@@ -21,18 +21,18 @@ public interface BookingRepo extends JpaRepository<Booking, Long> {
     void updateStatus(Long id, BookingStatus status);
 
     @Query("select b " +
-            "from Booking as b join fetch b.booker join fetch b.item where b.booker.id = ?1 order by b.start desc")
+            "from Booking as b join fetch b.item where b.booker.id = ?1 order by b.start desc")
     List<Booking> findAllByBookerIdOrderByStartDesc(Long bookerId);
 
     @Query("select b " +
-            "from Booking as b join b.booker join b.item where b.status = ?2 and b.booker.id = ?1 order by b.start desc")
+            "from Booking as b left join fetch b.item where b.status = ?2 and b.booker.id = ?1 order by b.start desc")
     List<Booking> findAllByBookerIdAndStatusOrderByStartDesc(Long bookerId, BookingStatus status);
 
     @Query("select b " +
-            "from Booking as b join b.booker join b.item where b.item.ownerId = ?1 order by b.start desc")
+            "from Booking as b left join fetch b.item where b.item.ownerId = ?1 order by b.start desc")
     List<Booking> findAllByOwnerIdOrderByStartDesc(Long ownerId);
 
     @Query("select b " +
-            "from Booking as b join b.booker join b.item where b.status = ?2 and b.item.ownerId = ?1 order by b.start desc")
+            "from Booking as b left join fetch b.item where b.status = ?2 and b.item.ownerId = ?1 order by b.start desc")
     List<Booking> findAllByOwnerIdAndStatusOrderByStartDesc(Long ownerId, BookingStatus status);
 }
