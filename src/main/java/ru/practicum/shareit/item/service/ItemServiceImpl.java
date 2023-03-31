@@ -14,15 +14,12 @@ import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.projection.CommentWithAuthorName;
-import ru.practicum.shareit.item.projection.ItemWithLastAndNextBooking;
+import ru.practicum.shareit.item.projection.ItemWithLastAndNextBookingAndComments;
 import ru.practicum.shareit.item.repo.CommentRepo;
 import ru.practicum.shareit.item.repo.ItemRepo;
 import ru.practicum.shareit.user.repo.UserRepo;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -129,7 +126,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemWithLastAndNextBooking getItemById(Long userId, Long itemId) {
+    public ItemWithLastAndNextBookingAndComments getItemById(Long userId, Long itemId) {
         boolean isOwner;
         try {
             checkIfUserIsOwner(userId, itemId);
@@ -138,13 +135,13 @@ public class ItemServiceImpl implements ItemService {
             isOwner = false;
         }
         LocalDateTime now = LocalDateTime.now();
-        return itemRepo.findItemWithLastAndNextBooking(itemId, now, isOwner);
+        return itemRepo.findItemWithLastAndNextBookingAndComments(itemId, now, isOwner);
     }
 
     @Override
-    public List<ItemWithLastAndNextBooking> getAllOwnersItems(Long ownerId) {
+    public List<ItemWithLastAndNextBookingAndComments> getAllOwnersItems(Long ownerId) {
         LocalDateTime now = LocalDateTime.now();
-        return itemRepo.findAllWithLastAndNextBooking(ownerId, now);
+        return itemRepo.findAllWithLastAndNextBookingAndComments(ownerId, now);
     }
 
     @Override

@@ -4,8 +4,9 @@ import org.springframework.context.annotation.Lazy;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.projection.BookingShortForItem;
 import ru.practicum.shareit.exception.ItemNotFoundException;
+import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.projection.ItemWithLastAndNextBooking;
+import ru.practicum.shareit.item.projection.ItemWithLastAndNextBookingAndComments;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -21,7 +22,9 @@ public class ItemRepoImpl implements ItemRepoCustom {
     }
 
     @Override
-    public ItemWithLastAndNextBooking findItemWithLastAndNextBooking(Long itemId, LocalDateTime now, boolean isOwner) {
+    public ItemWithLastAndNextBookingAndComments findItemWithLastAndNextBookingAndComments(Long itemId,
+                                                                                           LocalDateTime now,
+                                                                                           boolean isOwner) {
         Item item = itemRepo.findById(itemId)
                 .orElseThrow(() -> {throw new ItemNotFoundException("Item does not exist");});
         List<Booking> bookings = item.getBookings();
@@ -34,7 +37,8 @@ public class ItemRepoImpl implements ItemRepoCustom {
             lastBooking = getLastBooking(bookings, now);
             nextBooking = getNextBooking(bookings, now);
         }
-        return ItemWithLastAndNextBooking.builder()
+        List<Comment> comments = getComments(item.getComments());
+        return ItemWithLastAndNextBookingAndComments.builder()
                 .id(item.getId())
                 .ownerId(item.getOwnerId())
                 .name(item.getName())
@@ -42,15 +46,26 @@ public class ItemRepoImpl implements ItemRepoCustom {
                 .available(item.getAvailable())
                 .lastBooking(lastBooking)
                 .nextBooking(nextBooking)
+                .comments(comments)
                 .build();
     }
 
     @Override
-    public List<ItemWithLastAndNextBooking> findAllWithLastAndNextBooking(Long ownerId, LocalDateTime now) {
+    public List<ItemWithLastAndNextBookingAndComments> findAllWithLastAndNextBookingAndComments(Long ownerId, LocalDateTime now) {
         List<Item> ownersItems = itemRepo.findAllByOwnerId(ownerId);
-        return ownersItems.stream().map(item -> findItemWithLastAndNextBooking(item.getId(), now, true))
+        return ownersItems.stream().map(item -> findItemWithLastAndNextBookingAndComments(item.getId(), now, true))
                 .collect(Collectors.toList());
 
+    }
+
+    private List<Comment> getComments(List<Comment> itemComments) {
+        List<Comment> comments;
+        if(itemComments.isEmpty()) {
+            comments = List.of();
+        } else {
+            comments = itemComments;
+        }
+        return comments;
     }
 
     private BookingShortForItem getLastBooking(List<Booking> bookings, LocalDateTime now) {
