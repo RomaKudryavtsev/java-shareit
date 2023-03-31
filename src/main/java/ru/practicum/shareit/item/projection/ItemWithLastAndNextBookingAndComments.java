@@ -19,5 +19,5 @@ public class ItemWithLastAndNextBookingAndComments {
     Boolean available;
     BookingShortForItem lastBooking;
     BookingShortForItem nextBooking;
-    List<Comment> comments;
+    List<CommentWithAuthorName> comments;
 }

@@ -4,8 +4,8 @@ import org.springframework.context.annotation.Lazy;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.projection.BookingShortForItem;
 import ru.practicum.shareit.exception.ItemNotFoundException;
-import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.projection.CommentWithAuthorName;
 import ru.practicum.shareit.item.projection.ItemWithLastAndNextBookingAndComments;
 
 import java.time.LocalDateTime;
@@ -16,9 +16,11 @@ import java.util.stream.Collectors;
 
 public class ItemRepoImpl implements ItemRepoCustom {
     private final ItemRepo itemRepo;
+    private final CommentRepo commentRepo;
 
-    public ItemRepoImpl(@Lazy ItemRepo itemRepo) {
+    public ItemRepoImpl(@Lazy ItemRepo itemRepo, CommentRepo commentRepo) {
         this.itemRepo = itemRepo;
+        this.commentRepo = commentRepo;
     }
 
     @Override
@@ -37,7 +39,7 @@ public class ItemRepoImpl implements ItemRepoCustom {
             lastBooking = getLastBooking(bookings, now);
             nextBooking = getNextBooking(bookings, now);
         }
-        List<Comment> comments = getComments(item.getComments());
+        List<CommentWithAuthorName> comments = getComments(commentRepo.findAllWithAuthorNameByItemId(itemId));
         return ItemWithLastAndNextBookingAndComments.builder()
                 .id(item.getId())
                 .ownerId(item.getOwnerId())
@@ -58,8 +60,8 @@ public class ItemRepoImpl implements ItemRepoCustom {
 
     }
 
-    private List<Comment> getComments(List<Comment> itemComments) {
-        List<Comment> comments;
+    private List<CommentWithAuthorName> getComments(List<CommentWithAuthorName> itemComments) {
+        List<CommentWithAuthorName> comments;
         if(itemComments.isEmpty()) {
             comments = List.of();
         } else {

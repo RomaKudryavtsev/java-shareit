@@ -5,8 +5,14 @@ import org.springframework.data.jpa.repository.Query;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.projection.CommentWithAuthorName;
 
+import java.util.List;
+
 public interface CommentRepo extends JpaRepository<Comment, Long> {
     @Query("select new ru.practicum.shareit.item.projection.CommentWithAuthorName(c.id, c.text, c.author.name, " +
             "c.created) from Comment c where c.id = ?1")
     CommentWithAuthorName findWithAuthorName(Long commentId);
+
+    @Query("select new ru.practicum.shareit.item.projection.CommentWithAuthorName(c.id, c.text, c.author.name, " +
+            "c.created) from Comment c where c.item.id = ?1")
+    List<CommentWithAuthorName> findAllWithAuthorNameByItemId(Long itemId);
 }
