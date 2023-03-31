@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -16,5 +17,5 @@ public class CommentWithAuthorName {
     Long id;
     String text;
     String authorName;
-    Instant created;
+    LocalDateTime created;
 }

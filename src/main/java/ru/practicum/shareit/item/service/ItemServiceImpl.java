@@ -20,6 +20,7 @@ import ru.practicum.shareit.item.repo.ItemRepo;
 import ru.practicum.shareit.user.repo.UserRepo;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -33,7 +34,7 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRepo itemRepo;
     private final UserRepo userRepo;
     private final CommentRepo commentRepo;
-    private final Function<Instant, Predicate<Booking>> nonFutureBookingsFunction = now ->
+    private final Function<LocalDateTime, Predicate<Booking>> nonFutureBookingsFunction = now ->
             b -> !b.getStart().isAfter(now);
 
     @Autowired
@@ -56,7 +57,7 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
-    private void checkIfCommentRelatedToCurrentBooking(Long userId, Long itemId, Instant now) {
+    private void checkIfCommentRelatedToCurrentBooking(Long userId, Long itemId, LocalDateTime now) {
         Item item = itemRepo.findById(itemId)
                 .orElseThrow(() -> {throw new ItemNotFoundException("Item does not exist");});
         List<Booking> usersBookingsOfItem = item.getBookings().stream()
@@ -136,13 +137,13 @@ public class ItemServiceImpl implements ItemService {
         } catch (NonOwnerUpdatingException e) {
             isOwner = false;
         }
-        Instant now = Instant.now();
+        LocalDateTime now = LocalDateTime.now();
         return itemRepo.findItemWithLastAndNextBooking(itemId, now, isOwner);
     }
 
     @Override
     public List<ItemWithLastAndNextBooking> getAllOwnersItems(Long ownerId) {
-        Instant now = Instant.now();
+        LocalDateTime now = LocalDateTime.now();
         return itemRepo.findAllWithLastAndNextBooking(ownerId, now);
     }
 
@@ -160,8 +161,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public CommentWithAuthorName addComment(Long userId, Long itemId, CommentsRequestDto commentsRequestDto) {
-        ZonedDateTime nowInUtc = ZonedDateTime.now(ZoneOffset.UTC);
-        Instant now = nowInUtc.toInstant();
+        LocalDateTime now = LocalDateTime.now();
         checkIfCommentRelatedToCurrentBooking(userId, itemId, now);
         Comment newComment = CommentMapper.mapDtoToModel(commentsRequestDto);
         newComment.setItem(itemRepo.findById(itemId)

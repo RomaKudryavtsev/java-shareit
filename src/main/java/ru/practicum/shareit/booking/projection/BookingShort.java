@@ -10,6 +10,7 @@ import ru.practicum.shareit.item.projection.ItemShort;
 import ru.practicum.shareit.user.projection.UserShort;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -17,13 +18,13 @@ import java.time.Instant;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookingShort {
     Long id;
-    Instant start;
-    Instant end;
+    LocalDateTime start;
+    LocalDateTime end;
     BookingStatus status;
     UserShort booker;
     ItemShort item;
 
-    public BookingShort(Long id, Instant start, Instant end, BookingStatus status,
+    public BookingShort(Long id, LocalDateTime start, LocalDateTime end, BookingStatus status,
                         Long userId, Long itemId, String itemName) {
         this.id = id;
         this.start = start;

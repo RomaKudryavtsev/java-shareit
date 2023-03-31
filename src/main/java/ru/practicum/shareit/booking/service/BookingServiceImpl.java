@@ -35,11 +35,11 @@ public class BookingServiceImpl implements BookingService {
             () -> {throw new UserNotFoundException("User does not exist");};
     private final Supplier<ItemNotFoundException> itemNotFoundSupplier =
             () -> {throw new ItemNotFoundException("Item does not exist");};
-    private final Function<Instant, Predicate<BookingShort>> currentBookingsFunction = now ->
+    private final Function<LocalDateTime, Predicate<BookingShort>> currentBookingsFunction = now ->
             b -> b.getStart().isBefore(now) && b.getEnd().isAfter(now);
-    private final Function<Instant, Predicate<BookingShort>> pastBookingsFunction = now ->
+    private final Function<LocalDateTime, Predicate<BookingShort>> pastBookingsFunction = now ->
             b -> b.getEnd().isBefore(now);
-    private final Function<Instant, Predicate<BookingShort>> futureBookingsFunction = now ->
+    private final Function<LocalDateTime, Predicate<BookingShort>> futureBookingsFunction = now ->
             b -> b.getStart().isAfter(now);
 
 
@@ -156,7 +156,7 @@ public class BookingServiceImpl implements BookingService {
     public List<BookingResponseDto> getAllBookingsOfBookerByState(Long bookerId, String state) {
         checkIfOwnerExists(bookerId);
         BookingStatus requestedStatus = parseStatus(state);
-        Instant now = Instant.now();
+        LocalDateTime now = LocalDateTime.now();
         switch (requestedStatus) {
             case ALL:
                 return bookingRepo.findAllByBookerIdOrderByStartDesc(bookerId).stream()
@@ -183,7 +183,7 @@ public class BookingServiceImpl implements BookingService {
     public List<BookingResponseDto> getAllBookingsOfOwnerByState(Long ownerId, String state) {
         checkIfOwnerExists(ownerId);
         BookingStatus requestedStatus = parseStatus(state);
-        Instant now = Instant.now();
+        LocalDateTime now = LocalDateTime.now();
         switch (requestedStatus) {
             case ALL:
                 return bookingRepo.findAllByOwnerIdOrderByStartDesc(ownerId).stream()

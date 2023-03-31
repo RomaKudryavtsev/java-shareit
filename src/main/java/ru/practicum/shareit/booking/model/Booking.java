@@ -11,6 +11,7 @@ import ru.practicum.shareit.user.model.User;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "bookings")
@@ -25,10 +26,10 @@ public class Booking {
     Long id;
     @NotNull
     @Column(name = "start")
-    Instant start;
+    LocalDateTime start;
     @NotNull
     @Column(name = "fin")
-    Instant end;
+    LocalDateTime end;
     @Enumerated(EnumType.STRING)
     BookingStatus status;
     @ManyToOne(fetch = FetchType.EAGER)

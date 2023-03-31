@@ -9,6 +9,7 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.projection.ItemWithLastAndNextBooking;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +23,7 @@ public class ItemRepoImpl implements ItemRepoCustom {
     }
 
     @Override
-    public ItemWithLastAndNextBooking findItemWithLastAndNextBooking(Long itemId, Instant now, boolean isOwner) {
+    public ItemWithLastAndNextBooking findItemWithLastAndNextBooking(Long itemId, LocalDateTime now, boolean isOwner) {
         Item item = itemRepo.findById(itemId)
                 .orElseThrow(() -> {throw new ItemNotFoundException("Item does not exist");});
         List<Booking> bookings = item.getBookings();
@@ -47,14 +48,14 @@ public class ItemRepoImpl implements ItemRepoCustom {
     }
 
     @Override
-    public List<ItemWithLastAndNextBooking> findAllWithLastAndNextBooking(Long ownerId, Instant now) {
+    public List<ItemWithLastAndNextBooking> findAllWithLastAndNextBooking(Long ownerId, LocalDateTime now) {
         List<Item> ownersItems = itemRepo.findAllByOwnerId(ownerId);
         return ownersItems.stream().map(item -> findItemWithLastAndNextBooking(item.getId(), now, true))
                 .collect(Collectors.toList());
 
     }
 
-    private BookingShortForItem getLastBooking(List<Booking> bookings, Instant now) {
+    private BookingShortForItem getLastBooking(List<Booking> bookings, LocalDateTime now) {
         /*
         Optional<Booking> lastBookingOpt = bookings.stream()
                 .filter(b -> b.getEnd().isBefore(now))
@@ -72,7 +73,7 @@ public class ItemRepoImpl implements ItemRepoCustom {
                 new BookingShortForItem(booking.getId(), booking.getBooker().getId())).orElse(null);
     }
 
-    private BookingShortForItem getNextBooking(List<Booking> bookings, Instant now) {
+    private BookingShortForItem getNextBooking(List<Booking> bookings, LocalDateTime now) {
         /*
         Optional<Booking> nextBookingOpt = bookings.stream()
                 .filter(b -> b.getStart().isAfter(now))

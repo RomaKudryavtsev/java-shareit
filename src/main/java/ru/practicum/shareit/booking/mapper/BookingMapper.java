@@ -14,16 +14,16 @@ import java.time.ZoneOffset;
 public class BookingMapper {
     public static Booking mapDtoToModel(BookingRequestDto bookingRequestDto) {
         Booking booking = new Booking();
-        booking.setStart(bookingRequestDto.getStart().toInstant(ZoneOffset.UTC));
-        booking.setEnd(bookingRequestDto.getEnd().toInstant(ZoneOffset.UTC));
+        booking.setStart(bookingRequestDto.getStart());
+        booking.setEnd(bookingRequestDto.getEnd());
         return booking;
     }
 
     public static BookingResponseDto mapModelToDto(Booking booking) {
         return BookingResponseDto.builder()
                 .id(booking.getId())
-                .start(LocalDateTime.ofInstant(booking.getStart(), ZoneId.ofOffset("UTC", ZoneOffset.UTC)))
-                .end(LocalDateTime.ofInstant(booking.getEnd(), ZoneId.ofOffset("UTC", ZoneOffset.UTC)))
+                .start(booking.getStart())
+                .end(booking.getEnd())
                 .status(booking.getStatus())
                 .booker(new UserShort(booking.getBooker().getId()))
                 .item(new ItemShort(booking.getItem().getId(), booking.getItem().getName()))
@@ -33,8 +33,8 @@ public class BookingMapper {
     public static BookingResponseDto mapProjectionToDto(BookingShort bookingShort) {
         return BookingResponseDto.builder()
                 .id(bookingShort.getId())
-                .start(LocalDateTime.ofInstant(bookingShort.getStart(), ZoneId.ofOffset("UTC", ZoneOffset.UTC)))
-                .end(LocalDateTime.ofInstant(bookingShort.getEnd(), ZoneId.ofOffset("UTC", ZoneOffset.UTC)))
+                .start(bookingShort.getStart())
+                .end(bookingShort.getEnd())
                 .status(bookingShort.getStatus())
                 .booker(bookingShort.getBooker())
                 .item(bookingShort.getItem())
