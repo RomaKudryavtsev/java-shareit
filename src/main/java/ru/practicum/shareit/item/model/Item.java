@@ -39,7 +39,7 @@ public class Item {
     @OneToMany(
             targetEntity = Comment.class,
             mappedBy = "item",
-            fetch = FetchType.EAGER
+            fetch = FetchType.LAZY
     )
     @JsonManagedReference
     private List<Comment> comments;

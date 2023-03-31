@@ -1,6 +1,8 @@
 package ru.practicum.shareit.item.service;
 
+import ru.practicum.shareit.item.dto.CommentsRequestDto;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.projection.CommentWithAuthorName;
 import ru.practicum.shareit.item.projection.ItemWithLastAndNextBooking;
 
 import java.util.List;
@@ -15,4 +17,6 @@ public interface ItemService {
     List<ItemWithLastAndNextBooking> getAllOwnersItems(Long ownerId);
 
     List<ItemDto> searchItems(String text);
+
+    CommentWithAuthorName addComment(Long userId, Long itemId, CommentsRequestDto commentsRequestDto);
 }
