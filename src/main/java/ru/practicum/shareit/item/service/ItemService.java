@@ -1,6 +1,6 @@
 package ru.practicum.shareit.item.service;
 
-import ru.practicum.shareit.item.dto.CommentsRequestDto;
+import ru.practicum.shareit.item.dto.CommentsDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.projection.CommentWithAuthorName;
 import ru.practicum.shareit.item.projection.ItemWithLastAndNextBookingAndComments;
@@ -18,5 +18,5 @@ public interface ItemService {
 
     List<ItemDto> searchItems(String text);
 
-    CommentWithAuthorName addComment(Long userId, Long itemId, CommentsRequestDto commentsRequestDto);
+    CommentWithAuthorName addComment(Long userId, Long itemId, CommentsDto commentsDto);
 }

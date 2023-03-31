@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.exception.*;
-import ru.practicum.shareit.item.dto.CommentsRequestDto;
+import ru.practicum.shareit.item.dto.CommentsDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.CommentMapper;
 import ru.practicum.shareit.item.mapper.ItemMapper;
@@ -142,10 +142,10 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public CommentWithAuthorName addComment(Long userId, Long itemId, CommentsRequestDto commentsRequestDto) {
+    public CommentWithAuthorName addComment(Long userId, Long itemId, CommentsDto commentsDto) {
         LocalDateTime now = LocalDateTime.now();
         checkIfCommentRelatedToCurrentBooking(userId, itemId, now);
-        Comment newComment = CommentMapper.mapDtoToModel(commentsRequestDto);
+        Comment newComment = CommentMapper.mapDtoToModel(commentsDto);
         newComment.setItem(itemRepo.findById(itemId)
                 .orElseThrow(() -> {
                     throw new ItemNotFoundException("Item does not exist");

@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CommentsRequestDto {
+public class CommentsDto {
     @NotNull
     @NotEmpty
     String text;

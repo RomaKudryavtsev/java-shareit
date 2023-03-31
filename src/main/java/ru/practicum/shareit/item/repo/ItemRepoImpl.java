@@ -60,7 +60,6 @@ public class ItemRepoImpl implements ItemRepoCustom {
         List<Item> ownersItems = itemRepo.findAllByOwnerId(ownerId);
         return ownersItems.stream().map(item -> findItemWithLastAndNextBookingAndComments(item.getId(), now, true))
                 .collect(Collectors.toList());
-
     }
 
     private List<CommentWithAuthorName> getComments(List<CommentWithAuthorName> itemComments) {

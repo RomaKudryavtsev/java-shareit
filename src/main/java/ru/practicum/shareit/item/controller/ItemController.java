@@ -2,7 +2,7 @@ package ru.practicum.shareit.item.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.item.dto.CommentsRequestDto;
+import ru.practicum.shareit.item.dto.CommentsDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.projection.CommentWithAuthorName;
 import ru.practicum.shareit.item.projection.ItemWithLastAndNextBookingAndComments;
@@ -34,8 +34,8 @@ public class ItemController {
 
     @PostMapping(value = SPECIFIC_ITEM_PATH + "/comment")
     public CommentWithAuthorName addComment(@RequestHeader(USER_HEADER) Long userId, @PathVariable("id") Long itemId,
-                                            @RequestBody @Valid CommentsRequestDto commentsRequestDto) {
-        return itemService.addComment(userId, itemId, commentsRequestDto);
+                                            @RequestBody @Valid CommentsDto commentsDto) {
+        return itemService.addComment(userId, itemId, commentsDto);
     }
 
     @PatchMapping(value = SPECIFIC_ITEM_PATH)
