@@ -1,6 +1,5 @@
 package ru.practicum.shareit.item.service;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +25,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
-@Slf4j
 public class ItemServiceImpl implements ItemService {
     private final ItemRepo itemRepo;
     private final UserRepo userRepo;
@@ -63,31 +61,12 @@ public class ItemServiceImpl implements ItemService {
                 });
         List<Booking> usersBookingsOfItem = item.getBookings().stream()
                 .filter(b -> b.getBooker().getId().equals(userId))
-                .collect(Collectors.toList());
-        if (usersBookingsOfItem.isEmpty()) {
-            throw new IllegalCommentException("User is not a booker");
-        }
-        List<Booking> usersApprovedBookingsOfItem = usersBookingsOfItem.stream()
                 .filter(b -> b.getStatus().equals(BookingStatus.APPROVED))
-                .collect(Collectors.toList());
-        if (usersApprovedBookingsOfItem.isEmpty()) {
-            throw new IllegalCommentException("User does not have APPROVED bookings");
-        }
-        List<Booking> usersApprovedFutureBookings = usersApprovedBookingsOfItem.stream()
                 .filter(nonFutureBookingsFunction.apply(now))
                 .collect(Collectors.toList());
-        if (usersApprovedFutureBookings.isEmpty()) {
-            throw new IllegalCommentException("User has only future APPROVED bookings");
+        if (usersBookingsOfItem.isEmpty()) {
+            throw new IllegalCommentException("Illegal comment");
         }
-
-        /*
-        if (bookings.stream()
-                .filter(b -> b.getStatus().equals(BookingStatus.APPROVED))
-                .filter(b -> notFutureBookingsFunction.apply(now).test(b))
-                .noneMatch(b -> b.getBooker().getId().equals(userId))) {
-            throw new IllegalCommentException("Comment is related to future booking or user is not a booker");
-        }
-        */
     }
 
     @Transactional
