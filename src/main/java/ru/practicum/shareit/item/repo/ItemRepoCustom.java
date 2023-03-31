@@ -6,9 +6,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ItemRepoCustom {
-    ItemWithLastAndNextBookingAndComments findItemWithLastAndNextBookingAndComments (Long itemId, LocalDateTime now,
-                                                                                     boolean isOwner);
+    ItemWithLastAndNextBookingAndComments findItemWithLastAndNextBookingAndComments(Long itemId, LocalDateTime now,
+                                                                                    boolean isOwner);
 
-    List<ItemWithLastAndNextBookingAndComments> findAllWithLastAndNextBookingAndComments (Long ownerId,
-                                                                                          LocalDateTime now);
+    List<ItemWithLastAndNextBookingAndComments> findAllWithLastAndNextBookingAndComments(Long ownerId,
+                                                                                         LocalDateTime now);
 }

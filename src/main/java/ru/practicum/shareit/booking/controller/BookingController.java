@@ -4,8 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.booking.dto.BookingResponseDto;
-import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.service.BookingService;
 
 import java.util.List;
@@ -49,8 +47,8 @@ public class BookingController {
 
     @GetMapping("/owner")
     public List<BookingResponseDto> getAllBookingsOfOwnerByState(@RequestHeader(USER_HEADER) Long ownerId,
-                                                                  @RequestParam(defaultValue = "ALL", required = false)
-                                                                  String state) {
+                                                                 @RequestParam(defaultValue = "ALL", required = false)
+                                                                 String state) {
         return bookingService.getAllBookingsOfOwnerByState(ownerId, state);
     }
 

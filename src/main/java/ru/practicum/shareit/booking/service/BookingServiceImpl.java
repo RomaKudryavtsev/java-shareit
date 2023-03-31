@@ -29,11 +29,17 @@ public class BookingServiceImpl implements BookingService {
     private final UserRepo userRepo;
     private final ItemRepo itemRepo;
     private final Supplier<BookingNotFoundException> bookingNotFoundSupplier =
-            () -> {throw new BookingNotFoundException("Booking does not exist");};
+            () -> {
+                throw new BookingNotFoundException("Booking does not exist");
+            };
     private final Supplier<UserNotFoundException> userNotFoundSupplier =
-            () -> {throw new UserNotFoundException("User does not exist");};
+            () -> {
+                throw new UserNotFoundException("User does not exist");
+            };
     private final Supplier<ItemNotFoundException> itemNotFoundSupplier =
-            () -> {throw new ItemNotFoundException("Item does not exist");};
+            () -> {
+                throw new ItemNotFoundException("Item does not exist");
+            };
     private final Function<LocalDateTime, Predicate<BookingShort>> currentBookingsFunction = now ->
             b -> b.getStart().isBefore(now) && b.getEnd().isAfter(now);
     private final Function<LocalDateTime, Predicate<BookingShort>> pastBookingsFunction = now ->
@@ -95,7 +101,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     private void checkIfBookingExists(Long bookingId) {
-        if(bookingRepo.findById(bookingId).isEmpty()) {
+        if (bookingRepo.findById(bookingId).isEmpty()) {
             throw new BookingNotFoundException("Booking does not exist");
         }
     }

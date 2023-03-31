@@ -23,7 +23,9 @@ public class UserServiceImpl implements UserService {
 
     private boolean checkIfUserTriesToUpdateWithSameEmail(Long userId, User user) {
         return userRepo.findById(userId)
-                .orElseThrow(() -> {throw new UserNotFoundException("User does not exist");})
+                .orElseThrow(() -> {
+                    throw new UserNotFoundException("User does not exist");
+                })
                 .getEmail().equals(user.getEmail());
     }
 
@@ -50,15 +52,18 @@ public class UserServiceImpl implements UserService {
                 log.info("User {} tries to update with the same email", userId);
             }
         }
-        User userUpdated = userRepo.findById(userId)
-                .orElseThrow(() -> {throw new UserNotFoundException("User does not exist");});
-        return userUpdated;
+        return userRepo.findById(userId)
+                .orElseThrow(() -> {
+                    throw new UserNotFoundException("User does not exist");
+                });
     }
 
     @Override
     public User getUserById(Long userId) {
         return userRepo.findById(userId)
-                .orElseThrow(() -> {throw new UserNotFoundException("User does not exist");});
+                .orElseThrow(() -> {
+                    throw new UserNotFoundException("User does not exist");
+                });
     }
 
     @Override

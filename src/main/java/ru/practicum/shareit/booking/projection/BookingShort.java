@@ -9,7 +9,6 @@ import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.item.projection.ItemShort;
 import ru.practicum.shareit.user.projection.UserShort;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Getter

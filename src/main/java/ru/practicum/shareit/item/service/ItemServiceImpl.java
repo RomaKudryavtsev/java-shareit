@@ -42,7 +42,9 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private void checkIfUserIsOwner(Long ownerId, Long itemId) {
-        if (!itemRepo.findById(itemId).orElseThrow(() -> {throw new ItemNotFoundException("Item does not exist");})
+        if (!itemRepo.findById(itemId).orElseThrow(() -> {
+                    throw new ItemNotFoundException("Item does not exist");
+                })
                 .getOwnerId().equals(ownerId)) {
             throw new NonOwnerUpdatingException("Item can be updated only by its owner");
         }
@@ -56,23 +58,25 @@ public class ItemServiceImpl implements ItemService {
 
     private void checkIfCommentRelatedToCurrentBooking(Long userId, Long itemId, LocalDateTime now) {
         Item item = itemRepo.findById(itemId)
-                .orElseThrow(() -> {throw new ItemNotFoundException("Item does not exist");});
+                .orElseThrow(() -> {
+                    throw new ItemNotFoundException("Item does not exist");
+                });
         List<Booking> usersBookingsOfItem = item.getBookings().stream()
                 .filter(b -> b.getBooker().getId().equals(userId))
                 .collect(Collectors.toList());
-        if(usersBookingsOfItem.isEmpty()) {
+        if (usersBookingsOfItem.isEmpty()) {
             throw new IllegalCommentException("User is not a booker");
         }
         List<Booking> usersApprovedBookingsOfItem = usersBookingsOfItem.stream()
                 .filter(b -> b.getStatus().equals(BookingStatus.APPROVED))
                 .collect(Collectors.toList());
-        if(usersApprovedBookingsOfItem.isEmpty()) {
+        if (usersApprovedBookingsOfItem.isEmpty()) {
             throw new IllegalCommentException("User does not have APPROVED bookings");
         }
         List<Booking> usersApprovedFutureBookings = usersApprovedBookingsOfItem.stream()
                 .filter(nonFutureBookingsFunction.apply(now))
                 .collect(Collectors.toList());
-        if(usersApprovedFutureBookings.isEmpty()) {
+        if (usersApprovedFutureBookings.isEmpty()) {
             throw new IllegalCommentException("User has only future APPROVED bookings");
         }
 
@@ -122,7 +126,9 @@ public class ItemServiceImpl implements ItemService {
             itemRepo.updateName(inputItem.getId(), inputItem.getName());
         }
         return ItemMapper.mapToDto(itemRepo.findById(itemId)
-                .orElseThrow(() -> {throw new ItemNotFoundException("Item does not exist");}));
+                .orElseThrow(() -> {
+                    throw new ItemNotFoundException("Item does not exist");
+                }));
     }
 
     @Override
@@ -162,9 +168,13 @@ public class ItemServiceImpl implements ItemService {
         checkIfCommentRelatedToCurrentBooking(userId, itemId, now);
         Comment newComment = CommentMapper.mapDtoToModel(commentsRequestDto);
         newComment.setItem(itemRepo.findById(itemId)
-                .orElseThrow(() -> {throw new ItemNotFoundException("Item does not exist");}));
+                .orElseThrow(() -> {
+                    throw new ItemNotFoundException("Item does not exist");
+                }));
         newComment.setAuthor(userRepo.findById(userId)
-                .orElseThrow(() -> {throw new UserNotFoundException("User does not exist");}));
+                .orElseThrow(() -> {
+                    throw new UserNotFoundException("User does not exist");
+                }));
         newComment.setCreated(now);
         Comment addedComment = commentRepo.save(newComment);
         return commentRepo.findWithAuthorName(addedComment.getId());

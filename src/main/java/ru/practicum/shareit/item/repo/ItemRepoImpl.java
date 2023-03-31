@@ -29,11 +29,13 @@ public class ItemRepoImpl implements ItemRepoCustom {
                                                                                            LocalDateTime now,
                                                                                            boolean isOwner) {
         Item item = itemRepo.findById(itemId)
-                .orElseThrow(() -> {throw new ItemNotFoundException("Item does not exist");});
+                .orElseThrow(() -> {
+                    throw new ItemNotFoundException("Item does not exist");
+                });
         List<Booking> bookings = item.getBookings();
         BookingShortForItem lastBooking;
         BookingShortForItem nextBooking;
-        if(bookings == null || bookings.isEmpty() || !isOwner) {
+        if (bookings == null || bookings.isEmpty() || !isOwner) {
             lastBooking = null;
             nextBooking = null;
         } else {
@@ -63,7 +65,7 @@ public class ItemRepoImpl implements ItemRepoCustom {
 
     private List<CommentWithAuthorName> getComments(List<CommentWithAuthorName> itemComments) {
         List<CommentWithAuthorName> comments;
-        if(itemComments.isEmpty()) {
+        if (itemComments.isEmpty()) {
             comments = List.of();
         } else {
             comments = itemComments;
@@ -76,7 +78,7 @@ public class ItemRepoImpl implements ItemRepoCustom {
                 .filter(b -> b.getEnd().isBefore(now) ^ (b.getStart().isBefore(now) && b.getEnd().isAfter(now)))
                 .filter(b -> b.getStatus().equals(BookingStatus.APPROVED))
                 .max(Comparator.comparing(Booking::getEnd));
-        if(lastBookingOpt.isEmpty()) {
+        if (lastBookingOpt.isEmpty()) {
             return null;
         } else {
             return new BookingShortForItem(lastBookingOpt.get().getId(), lastBookingOpt.get().getBooker().getId());
@@ -88,7 +90,7 @@ public class ItemRepoImpl implements ItemRepoCustom {
                 .filter(b -> b.getStart().isAfter(now))
                 .filter(b -> b.getStatus().equals(BookingStatus.APPROVED))
                 .min(Comparator.comparing(Booking::getStart));
-        if(nextBookingOpt.isEmpty()) {
+        if (nextBookingOpt.isEmpty()) {
             return null;
         } else {
             return new BookingShortForItem(nextBookingOpt.get().getId(), nextBookingOpt.get().getBooker().getId());

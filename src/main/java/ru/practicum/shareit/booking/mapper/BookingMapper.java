@@ -7,10 +7,6 @@ import ru.practicum.shareit.booking.projection.BookingShort;
 import ru.practicum.shareit.item.projection.ItemShort;
 import ru.practicum.shareit.user.projection.UserShort;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-
 public class BookingMapper {
     public static Booking mapDtoToModel(BookingRequestDto bookingRequestDto) {
         Booking booking = new Booking();

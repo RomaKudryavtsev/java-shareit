@@ -10,7 +10,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "items", schema = "public")
-@Getter @Setter
+@Getter
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
