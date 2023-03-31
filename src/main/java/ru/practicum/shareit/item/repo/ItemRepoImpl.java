@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.repo;
 
 import org.springframework.context.annotation.Lazy;
 import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.projection.BookingShortForItem;
 import ru.practicum.shareit.exception.ItemNotFoundException;
 import ru.practicum.shareit.item.model.Item;
@@ -72,7 +73,8 @@ public class ItemRepoImpl implements ItemRepoCustom {
 
     private BookingShortForItem getLastBooking(List<Booking> bookings, LocalDateTime now) {
         Optional<Booking> lastBookingOpt = bookings.stream()
-                .filter(b -> b.getEnd().isBefore(now))
+                .filter(b -> b.getEnd().isBefore(now) ^ (b.getStart().isBefore(now) && b.getEnd().isAfter(now)))
+                .filter(b -> b.getStatus().equals(BookingStatus.APPROVED))
                 .max(Comparator.comparing(Booking::getEnd));
         if(lastBookingOpt.isEmpty()) {
             return null;
@@ -84,6 +86,7 @@ public class ItemRepoImpl implements ItemRepoCustom {
     private BookingShortForItem getNextBooking(List<Booking> bookings, LocalDateTime now) {
         Optional<Booking> nextBookingOpt = bookings.stream()
                 .filter(b -> b.getStart().isAfter(now))
+                .filter(b -> b.getStatus().equals(BookingStatus.APPROVED))
                 .min(Comparator.comparing(Booking::getStart));
         if(nextBookingOpt.isEmpty()) {
             return null;
