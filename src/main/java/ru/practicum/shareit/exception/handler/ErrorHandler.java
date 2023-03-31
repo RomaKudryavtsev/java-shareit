@@ -11,93 +11,31 @@ import ru.practicum.shareit.exception.*;
 @RestControllerAdvice
 @Slf4j
 public class ErrorHandler {
-    @ExceptionHandler({EmptyEmailException.class})
+    @ExceptionHandler({
+            EmptyEmailException.class,
+            EmptyItemAvailabilityException.class,
+            EmptyItemDescriptionException.class,
+            EmptyItemNameException.class,
+            ItemUnavailableException.class,
+            WrongDatesException.class,
+            UpdateStatusAfterApprovalException.class,
+            IllegalCommentException.class,
+    })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleEmptyEmailExceptions(final EmptyEmailException e) {
+    public ErrorResponse handleBadRequest(final RuntimeException e) {
         log.error(e.getMessage());
         return new ErrorResponse(e.getMessage());
     }
 
-    @ExceptionHandler({EmptyItemAvailabilityException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleEmptyItemAvailabilityExceptions(final EmptyItemAvailabilityException e) {
-        log.error(e.getMessage());
-        return new ErrorResponse(e.getMessage());
-    }
-
-    @ExceptionHandler({EmptyItemDescriptionException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleEmptyItemDescriptionException(final EmptyItemDescriptionException e) {
-        log.error(e.getMessage());
-        return new ErrorResponse(e.getMessage());
-    }
-
-    @ExceptionHandler({EmptyItemNameException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleEmptyItemNameException(final EmptyItemNameException e) {
-        log.error(e.getMessage());
-        return new ErrorResponse(e.getMessage());
-    }
-
-    @ExceptionHandler({ItemUnavailableException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handeItemUnavailableException(final ItemUnavailableException e) {
-        log.error(e.getMessage());
-        return new ErrorResponse(e.getMessage());
-    }
-
-    @ExceptionHandler({WrongDatesException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleWrongDatesException(final WrongDatesException e) {
-        log.error(e.getMessage());
-        return new ErrorResponse(e.getMessage());
-    }
-
-    @ExceptionHandler({UpdateStatusAfterApprovalException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleUpdateAfterApprovalException(final UpdateStatusAfterApprovalException e) {
-        log.error(e.getMessage());
-        return new ErrorResponse(e.getMessage());
-    }
-
-    @ExceptionHandler({IllegalCommentException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleIllegalCommentException(final IllegalCommentException e) {
-        log.error(e.getMessage());
-        return new ErrorResponse(e.getMessage());
-    }
-
-    @ExceptionHandler({ItemNotFoundException.class})
+    @ExceptionHandler({
+            ItemNotFoundException.class,
+            UserNotFoundException.class,
+            NonOwnerUpdatingException.class,
+            BookingNotFoundException.class,
+            BookerIsOwnerException.class
+    })
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleItemNotFoundException(final ItemNotFoundException e) {
-        log.error(e.getMessage());
-        return new ErrorResponse(e.getMessage());
-    }
-
-    @ExceptionHandler({UserNotFoundException.class})
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleUserNotFoundException(final UserNotFoundException e) {
-        log.error(e.getMessage());
-        return new ErrorResponse(e.getMessage());
-    }
-
-    @ExceptionHandler({NonOwnerUpdatingException.class})
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleNonOwnerException(final NonOwnerUpdatingException e) {
-        log.error(e.getMessage());
-        return new ErrorResponse(e.getMessage());
-    }
-
-    @ExceptionHandler({BookingNotFoundException.class})
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleBookingNotFoundException(final BookingNotFoundException e) {
-        log.error(e.getMessage());
-        return new ErrorResponse(e.getMessage());
-    }
-
-    @ExceptionHandler({BookerIsOwnerException.class})
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleBookerIsOwnerException(final BookerIsOwnerException e) {
+    public ErrorResponse handleNotFound(final RuntimeException e) {
         log.error(e.getMessage());
         return new ErrorResponse(e.getMessage());
     }
