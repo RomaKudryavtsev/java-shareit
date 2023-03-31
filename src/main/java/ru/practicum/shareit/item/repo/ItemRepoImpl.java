@@ -2,13 +2,11 @@ package ru.practicum.shareit.item.repo;
 
 import org.springframework.context.annotation.Lazy;
 import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.projection.BookingShortForItem;
 import ru.practicum.shareit.exception.ItemNotFoundException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.projection.ItemWithLastAndNextBooking;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -56,38 +54,24 @@ public class ItemRepoImpl implements ItemRepoCustom {
     }
 
     private BookingShortForItem getLastBooking(List<Booking> bookings, LocalDateTime now) {
-        /*
         Optional<Booking> lastBookingOpt = bookings.stream()
                 .filter(b -> b.getEnd().isBefore(now))
-                .max(Comparator.comparingLong(b -> b.getEnd().toEpochMilli()));
-        Booking lastBooking;
+                .max(Comparator.comparing(Booking::getEnd));
         if(lastBookingOpt.isEmpty()) {
-            lastBooking = bookings.stream().min(Comparator.comparing(Booking::getId)).orElseThrow();
+            return null;
         } else {
-            lastBooking = lastBookingOpt.get();
+            return new BookingShortForItem(lastBookingOpt.get().getId(), lastBookingOpt.get().getBooker().getId());
         }
-        */
-        Optional<Booking> lastBookingOpt = bookings.stream().filter(b -> b.getStatus().equals(BookingStatus.APPROVED))
-                .min(Comparator.comparing(Booking::getId));
-        return lastBookingOpt.map(booking ->
-                new BookingShortForItem(booking.getId(), booking.getBooker().getId())).orElse(null);
     }
 
     private BookingShortForItem getNextBooking(List<Booking> bookings, LocalDateTime now) {
-        /*
         Optional<Booking> nextBookingOpt = bookings.stream()
                 .filter(b -> b.getStart().isAfter(now))
-                .min(Comparator.comparingLong(b -> b.getStart().toEpochMilli()));
-        Booking nextBooking;
+                .min(Comparator.comparing(Booking::getStart));
         if(nextBookingOpt.isEmpty()) {
-            nextBooking = bookings.stream().max(Comparator.comparing(Booking::getId)).orElseThrow();
+            return null;
         } else {
-            nextBooking = nextBookingOpt.get();
+            return new BookingShortForItem(nextBookingOpt.get().getId(), nextBookingOpt.get().getBooker().getId());
         }
-        */
-        Optional<Booking> nextBookingOpt = bookings.stream().filter(b -> b.getStatus().equals(BookingStatus.APPROVED))
-                .max(Comparator.comparing(Booking::getId));
-        return nextBookingOpt.map(booking ->
-                new BookingShortForItem(booking.getId(), booking.getBooker().getId())).orElse(null);
     }
 }
