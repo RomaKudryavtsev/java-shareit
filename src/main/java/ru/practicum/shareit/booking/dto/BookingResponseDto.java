@@ -19,8 +19,6 @@ public class BookingResponseDto {
     LocalDateTime start;
     LocalDateTime end;
     BookingStatus status;
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     UserShort booker;
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     ItemShort item;
 }
