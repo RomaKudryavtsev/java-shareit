@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.request.ItemRequest;
 
 import javax.persistence.*;
 import java.util.List;
@@ -35,7 +36,7 @@ public class Item {
             fetch = FetchType.EAGER
     )
     @JsonManagedReference
-    private List<Booking> bookings;
+    List<Booking> bookings;
 
     @OneToMany(
             targetEntity = Comment.class,
@@ -43,7 +44,12 @@ public class Item {
             fetch = FetchType.LAZY
     )
     @JsonManagedReference
-    private List<Comment> comments;
+    List<Comment> comments;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "request_id", referencedColumnName = "id")
+    @JsonBackReference
+    ItemRequest request;
+
 
     public Boolean getAvailable() {
         return available;
