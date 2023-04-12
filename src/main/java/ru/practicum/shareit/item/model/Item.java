@@ -37,7 +37,6 @@ public class Item {
     )
     @JsonManagedReference
     List<Booking> bookings;
-
     @OneToMany(
             targetEntity = Comment.class,
             mappedBy = "item",
@@ -49,7 +48,6 @@ public class Item {
     @JoinColumn(name = "request_id", referencedColumnName = "id")
     @JsonBackReference
     ItemRequest request;
-
 
     public Boolean getAvailable() {
         return available;
