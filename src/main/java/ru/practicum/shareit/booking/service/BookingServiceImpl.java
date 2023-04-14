@@ -2,6 +2,8 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
@@ -158,55 +160,59 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingResponseDto> getAllBookingsOfBookerByState(Long bookerId, String state) {
+    public List<BookingResponseDto> getAllBookingsOfBookerByState(Long bookerId, String state, int from, int size) {
         checkIfOwnerExists(bookerId);
         BookingStatus requestedStatus = parseStatus(state);
         LocalDateTime now = LocalDateTime.now();
+        Pageable request = PageRequest.of(from > 0 ? from / size : 0, size);
         switch (requestedStatus) {
             case ALL:
-                return bookingRepo.findAllByBookerIdOrderByStartDesc(bookerId).stream()
+                return bookingRepo.findAllByBookerIdOrderByStartDesc(bookerId, request).getContent().stream()
                         .map(BookingMapper::mapProjectionToDto).collect(Collectors.toList());
             case CURRENT:
-                return bookingRepo.findAllByBookerIdOrderByStartDesc(bookerId).stream()
+                return bookingRepo.findAllByBookerIdOrderByStartDesc(bookerId, request).getContent().stream()
                         .filter(currentBookingsFunction.apply(now))
                         .map(BookingMapper::mapProjectionToDto).collect(Collectors.toList());
             case PAST:
-                return bookingRepo.findAllByBookerIdOrderByStartDesc(bookerId).stream()
+                return bookingRepo.findAllByBookerIdOrderByStartDesc(bookerId, request).getContent().stream()
                         .filter(pastBookingsFunction.apply(now))
                         .map(BookingMapper::mapProjectionToDto).collect(Collectors.toList());
             case FUTURE:
-                return bookingRepo.findAllByBookerIdOrderByStartDesc(bookerId).stream()
+                return bookingRepo.findAllByBookerIdOrderByStartDesc(bookerId, request).getContent().stream()
                         .filter(futureBookingsFunction.apply(now))
                         .map(BookingMapper::mapProjectionToDto).collect(Collectors.toList());
             default:
-                return bookingRepo.findAllByBookerIdAndStatusOrderByStartDesc(bookerId, requestedStatus).stream()
+                return bookingRepo.findAllByBookerIdAndStatusOrderByStartDesc(bookerId, requestedStatus, request)
+                        .getContent().stream()
                         .map(BookingMapper::mapProjectionToDto).collect(Collectors.toList());
         }
     }
 
     @Override
-    public List<BookingResponseDto> getAllBookingsOfOwnerByState(Long ownerId, String state) {
+    public List<BookingResponseDto> getAllBookingsOfOwnerByState(Long ownerId, String state, int from, int size) {
         checkIfOwnerExists(ownerId);
         BookingStatus requestedStatus = parseStatus(state);
         LocalDateTime now = LocalDateTime.now();
+        Pageable request = PageRequest.of(from > 0 ? from / size : 0, size);
         switch (requestedStatus) {
             case ALL:
-                return bookingRepo.findAllByOwnerIdOrderByStartDesc(ownerId).stream()
+                return bookingRepo.findAllByOwnerIdOrderByStartDesc(ownerId, request).getContent().stream()
                         .map(BookingMapper::mapProjectionToDto).collect(Collectors.toList());
             case CURRENT:
-                return bookingRepo.findAllByOwnerIdOrderByStartDesc(ownerId).stream()
+                return bookingRepo.findAllByOwnerIdOrderByStartDesc(ownerId, request).getContent().stream()
                         .filter(currentBookingsFunction.apply(now))
                         .map(BookingMapper::mapProjectionToDto).collect(Collectors.toList());
             case PAST:
-                return bookingRepo.findAllByOwnerIdOrderByStartDesc(ownerId).stream()
+                return bookingRepo.findAllByOwnerIdOrderByStartDesc(ownerId, request).getContent().stream()
                         .filter(pastBookingsFunction.apply(now))
                         .map(BookingMapper::mapProjectionToDto).collect(Collectors.toList());
             case FUTURE:
-                return bookingRepo.findAllByOwnerIdOrderByStartDesc(ownerId).stream()
+                return bookingRepo.findAllByOwnerIdOrderByStartDesc(ownerId, request).getContent().stream()
                         .filter(futureBookingsFunction.apply(now))
                         .map(BookingMapper::mapProjectionToDto).collect(Collectors.toList());
             default:
-                return bookingRepo.findAllByOwnerIdAndStatusOrderByStartDesc(ownerId, requestedStatus).stream()
+                return bookingRepo.findAllByOwnerIdAndStatusOrderByStartDesc(ownerId, requestedStatus, request)
+                        .getContent().stream()
                         .map(BookingMapper::mapProjectionToDto).collect(Collectors.toList());
         }
     }
