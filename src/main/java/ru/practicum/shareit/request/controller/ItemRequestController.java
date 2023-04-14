@@ -30,4 +30,10 @@ public class ItemRequestController {
     public List<ItemRequestWithItemsDto> getUsersRequestsWithItems(@RequestHeader(USER_HEADER) Long userId) {
         return requestService.getUsersRequestsWithItems(userId);
     }
+
+    @GetMapping("/{requestId}")
+    public ItemRequestWithItemsDto getRequestByIdWithItems(@RequestHeader(USER_HEADER) Long userId,
+                                                           @PathVariable("requestId") Long requestId) {
+        return requestService.getRequestByIdWithItems(userId, requestId);
+    }
 }
