@@ -13,6 +13,7 @@ public class ItemDto {
     String name;
     String description;
     Boolean available;
+    Long requestId;
 
     public Boolean getAvailable() {
         return available;

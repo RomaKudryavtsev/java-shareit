@@ -16,6 +16,7 @@ import ru.practicum.shareit.item.projection.CommentWithAuthorName;
 import ru.practicum.shareit.item.projection.ItemWithLastAndNextBookingAndComments;
 import ru.practicum.shareit.item.repo.CommentRepo;
 import ru.practicum.shareit.item.repo.ItemRepo;
+import ru.practicum.shareit.request.repo.RequestRepo;
 import ru.practicum.shareit.user.repo.UserRepo;
 
 import java.time.LocalDateTime;
@@ -29,14 +30,16 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRepo itemRepo;
     private final UserRepo userRepo;
     private final CommentRepo commentRepo;
+    private final RequestRepo requestRepo;
     private final Function<LocalDateTime, Predicate<Booking>> nonFutureBookingsFunction = now ->
             b -> !b.getStart().isAfter(now);
 
     @Autowired
-    public ItemServiceImpl(ItemRepo itemRepo, UserRepo userRepo, CommentRepo commentRepo) {
+    public ItemServiceImpl(ItemRepo itemRepo, UserRepo userRepo, CommentRepo commentRepo, RequestRepo requestRepo) {
         this.itemRepo = itemRepo;
         this.userRepo = userRepo;
         this.commentRepo = commentRepo;
+        this.requestRepo = requestRepo;
     }
 
     private void checkIfUserIsOwner(Long ownerId, Long itemId) {
@@ -84,6 +87,10 @@ public class ItemServiceImpl implements ItemService {
         checkIfUserExists(userId);
         Item inputItem = ItemMapper.mapToModel(itemDto);
         inputItem.setOwnerId(userId);
+        if(itemDto.getRequestId() != null) {
+            inputItem.setRequest(requestRepo.findById(itemDto.getRequestId())
+                    .orElseThrow(() -> {throw new RequestNotFoundException("Request does not exist");}));
+        }
         Item addedItem = itemRepo.save(inputItem);
         return ItemMapper.mapToDto(addedItem);
     }

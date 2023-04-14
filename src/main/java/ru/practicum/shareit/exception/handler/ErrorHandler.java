@@ -32,7 +32,8 @@ public class ErrorHandler {
             UserNotFoundException.class,
             NonOwnerUpdatingException.class,
             BookingNotFoundException.class,
-            BookerIsOwnerException.class
+            BookerIsOwnerException.class,
+            RequestNotFoundException.class
     })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFound(final RuntimeException e) {
