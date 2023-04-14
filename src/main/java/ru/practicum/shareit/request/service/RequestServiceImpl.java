@@ -1,6 +1,8 @@
 package ru.practicum.shareit.request.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.RequestNotFoundException;
 import ru.practicum.shareit.exception.UserNotFoundException;
@@ -61,5 +63,14 @@ public class RequestServiceImpl implements RequestService {
         checkIfUserExists(userId);
         checkIfRequestExists(requestId);
         return ItemRequestMapper.mapModelToDtoWithItems(requestRepo.findAllById(requestId));
+    }
+
+    @Override
+    public List<ItemRequestWithItemsDto> getAllRequestsOfOtherUsers(Long userId, int from, int size) {
+        checkIfUserExists(userId);
+        Pageable request = PageRequest.of(from > 0 ? from / size : 0, size);
+        return requestRepo.findAllByUser_IdNot(userId, request).getContent().stream()
+                .map(ItemRequestMapper::mapModelToDtoWithItems)
+                .collect(Collectors.toList());
     }
 }
