@@ -118,7 +118,7 @@ public class BookingServiceImpl implements BookingService {
         try {
             return BookingStatus.valueOf(state);
         } catch (IllegalArgumentException e) {
-            throw new WrongDatesException(String.format("Unknown state: %s", state));
+            throw new WrongStatusException(String.format("Unknown state: %s", state));
         }
     }
 
