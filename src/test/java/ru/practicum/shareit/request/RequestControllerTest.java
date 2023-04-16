@@ -45,24 +45,9 @@ public class RequestControllerTest {
 
     @BeforeEach
     void setUp() {
-        item = ItemDto.builder()
-                .id(1L)
-                .name("New item")
-                .description("New item requested")
-                .available(true)
-                .requestId(1L)
-                .build();
-        request = ItemRequestDto.builder()
-                .id(1L)
-                .description("New item needed")
-                .created(testNow)
-                .build();
-        requestWithItems = ItemRequestWithItemsDto.builder()
-                .id(1L)
-                .description("Request with items")
-                .created(testNow)
-                .items(List.of(item))
-                .build();
+        item = setItemDto();
+        request = setItemRequestDto();
+        requestWithItems = setItemRequestWithItems();
     }
 
     @Test
@@ -122,5 +107,32 @@ public class RequestControllerTest {
                 .andExpect(jsonPath("$[0].items", hasSize(1)))
                 .andExpect(jsonPath("$[0].items[0].id", is(item.getId()), Long.class))
                 .andExpect(jsonPath("$[0].items[0].requestId", is(requestWithItems.getId()), Long.class));
+    }
+
+    private ItemDto setItemDto() {
+        return ItemDto.builder()
+                .id(1L)
+                .name("New item")
+                .description("New item requested")
+                .available(true)
+                .requestId(1L)
+                .build();
+    }
+
+    private ItemRequestDto setItemRequestDto() {
+        return ItemRequestDto.builder()
+                .id(1L)
+                .description("New item needed")
+                .created(testNow)
+                .build();
+    }
+
+    private ItemRequestWithItemsDto setItemRequestWithItems() {
+        return ItemRequestWithItemsDto.builder()
+                .id(1L)
+                .description("Request with items")
+                .created(testNow)
+                .items(List.of(item))
+                .build();
     }
 }
