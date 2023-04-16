@@ -16,6 +16,7 @@ import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.booking.dto.BookingResponseDto;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.service.BookingService;
+import ru.practicum.shareit.exception.WrongStatusException;
 import ru.practicum.shareit.item.projection.ItemShort;
 import ru.practicum.shareit.user.projection.UserShort;
 
@@ -23,8 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -111,6 +111,19 @@ public class BookingControllerTest {
                 .andExpect(jsonPath("$[0].booker.id", is(bookingResponse.getBooker().getId().intValue())))
                 .andExpect(jsonPath("$[0].item.id", is(bookingResponse.getItem().getId().intValue())))
                 .andExpect(jsonPath("$[0].item.name", is(bookingResponse.getItem().getName())));
+    }
+
+    @Test
+    void testGetAllBookingsWrongStatus() throws Exception {
+        Mockito.when(bookingService.getAllBookingsOfBookerByState(Mockito.anyLong(), Mockito.anyString(),
+                Mockito.anyInt(), Mockito.anyInt())).thenThrow(new WrongStatusException("Wrong status"));
+        mvc.perform(get("/bookings")
+                        .header("X-Sharer-User-Id", "1")
+                        .param("state", "WRONG")
+                        .param("from", "0")
+                        .param("size", "10"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.error", equalTo("Wrong status")));
     }
 
     @Test
