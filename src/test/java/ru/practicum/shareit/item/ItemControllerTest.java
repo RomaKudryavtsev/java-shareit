@@ -13,6 +13,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.booking.projection.BookingShortForItem;
+import ru.practicum.shareit.exception.EmptyItemAvailabilityException;
+import ru.practicum.shareit.exception.ItemNotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.projection.CommentWithAuthorName;
 import ru.practicum.shareit.item.projection.ItemWithLastAndNextBookingAndComments;
@@ -22,8 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -65,6 +66,20 @@ public class ItemControllerTest {
                 .andExpect(jsonPath("$.description", is(item.getDescription())))
                 .andExpect(jsonPath("$.available", is(item.getAvailable())))
                 .andExpect(jsonPath("$.requestId", is(item.getRequestId().intValue())));
+    }
+
+    @Test
+    void testAddItemEmptyAvailabilityFail() throws Exception {
+        Mockito.when(itemService.addItem(Mockito.anyLong(), Mockito.any()))
+                .thenThrow(new EmptyItemAvailabilityException("Empty availability"));
+        mvc.perform(post("/items")
+                        .header("X-Sharer-User-Id", "1")
+                        .content(mapper.writeValueAsString(item))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", notNullValue()));
     }
 
     @Test
@@ -118,6 +133,16 @@ public class ItemControllerTest {
                 .andExpect(jsonPath("$.comments[0].id", is(comment.getId()), Long.class))
                 .andExpect(jsonPath("$.comments[0].text", is(comment.getText())))
                 .andExpect(jsonPath("$.comments[0].authorName", is(comment.getAuthorName())));
+    }
+
+    @Test
+    void testGetItemByIdNotFoundFail() throws Exception {
+        Mockito.when(itemService.getItemById(Mockito.anyLong(), Mockito.anyLong()))
+                .thenThrow(new ItemNotFoundException("Item not found"));
+        mvc.perform(get("/items/1")
+                        .header("X-Sharer-User-Id", "1"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error", notNullValue()));
     }
 
     @Test
