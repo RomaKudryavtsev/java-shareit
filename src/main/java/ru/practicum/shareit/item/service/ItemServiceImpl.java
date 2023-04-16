@@ -87,9 +87,11 @@ public class ItemServiceImpl implements ItemService {
         checkIfUserExists(userId);
         Item inputItem = ItemMapper.mapToModel(itemDto);
         inputItem.setOwnerId(userId);
-        if(itemDto.getRequestId() != null) {
+        if (itemDto.getRequestId() != null) {
             inputItem.setRequest(requestRepo.findById(itemDto.getRequestId())
-                    .orElseThrow(() -> {throw new RequestNotFoundException("Request does not exist");}));
+                    .orElseThrow(() -> {
+                        throw new RequestNotFoundException("Request does not exist");
+                    }));
         }
         Item addedItem = itemRepo.save(inputItem);
         return ItemMapper.mapToDto(addedItem);
