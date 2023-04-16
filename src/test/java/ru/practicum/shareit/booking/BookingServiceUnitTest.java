@@ -22,6 +22,7 @@ import ru.practicum.shareit.user.repo.UserRepo;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -38,32 +39,73 @@ public class BookingServiceUnitTest {
 
     @BeforeEach
     void setUp() {
-        LocalDateTime testTime = LocalDateTime.of(2022, 4, 16, 12, 0, 0);
-        BookingShort booking = new BookingShort(1L, testTime, testTime.plusDays(1),
-                BookingStatus.APPROVED, new UserShort(1L), new ItemShort(1L, "Item"));
-        Page<BookingShort> page = new PageImpl<>(List.of(booking));
+        User user = setUser(1L, "John Sharer", "js@gmail.com");
+        Mockito.when(userRepoMock.findById(Mockito.anyLong())).thenReturn(Optional.of(user));
+
+        LocalDateTime timeInPast = LocalDateTime.now().minusYears(1);
+        LocalDateTime timeInFuture = LocalDateTime.now().plusYears(1);
+        LocalDateTime timeCurrent = LocalDateTime.now();
+
+        BookingShort bookingInPast = setBooking(1L, timeInPast);
+        BookingShort bookingInFuture = setBooking(2L, timeInFuture);
+        BookingShort bookingCurrent = setBooking(3L, timeCurrent);
+
+        Page<BookingShort> page = new PageImpl<>(List.of(bookingInPast, bookingInFuture, bookingCurrent));
+
         Mockito.lenient().when(bookingRepoMock.findAllByBookerIdOrderByStartDesc(Mockito.anyLong(), Mockito.any()))
                 .thenReturn(page);
         Mockito.lenient().when(bookingRepoMock.findAllByOwnerIdOrderByStartDesc(Mockito.anyLong(), Mockito.any()))
                 .thenReturn(page);
-        User user = setUser(1L, "John Sharer", "js@gmail.com");
-        Mockito.when(userRepoMock.findById(Mockito.anyLong())).thenReturn(Optional.of(user));
     }
 
     @Test
-    void testGetAllBookingsOfBookerByState() {
-        List<BookingResponseDto> bookings = bookingService
+    void testGetAllBookingsOfBookerPast() {
+        List<BookingResponseDto> bookingsInPast = bookingService
                 .getAllBookingsOfBookerByState(1L, "PAST", 0, 10);
-        assertThat(bookings, hasSize(1));
-        assertThat(bookings.get(0).getId(), equalTo(1L));
+        assertThat(bookingsInPast, hasSize(1));
+        assertThat(bookingsInPast.get(0).getId(), equalTo(1L));
     }
 
     @Test
-    void testGetAllBookingsOfOwnerByState() {
-        List<BookingResponseDto> bookings = bookingService
+    void testGetAllBookingsOfBookerFuture() {
+        List<BookingResponseDto> bookingsInFuture = bookingService
+                .getAllBookingsOfBookerByState(1L, "FUTURE", 0, 10);
+        assertThat(bookingsInFuture, hasSize(1));
+        assertThat(bookingsInFuture.get(0).getId(), equalTo(2L));
+    }
+
+    @Test
+    void testGetAllBookingsOfBookerCurrent() throws InterruptedException {
+        TimeUnit.SECONDS.sleep(5);
+        List<BookingResponseDto> bookingsCurrent = bookingService
+                .getAllBookingsOfBookerByState(1L, "CURRENT", 0, 10);
+        assertThat(bookingsCurrent, hasSize(1));
+        assertThat(bookingsCurrent.get(0).getId(), equalTo(3L));
+    }
+
+    @Test
+    void testGetAllBookingsOfOwnerPast() {
+        List<BookingResponseDto> bookingsInPast = bookingService
                 .getAllBookingsOfOwnerByState(1L, "PAST", 0, 10);
-        assertThat(bookings, hasSize(1));
-        assertThat(bookings.get(0).getId(), equalTo(1L));
+        assertThat(bookingsInPast, hasSize(1));
+        assertThat(bookingsInPast.get(0).getId(), equalTo(1L));
+    }
+
+    @Test
+    void testGetAllBookingsOfOwnerFuture() {
+        List<BookingResponseDto> bookingsInFuture = bookingService
+                .getAllBookingsOfOwnerByState(1L, "FUTURE", 0, 10);
+        assertThat(bookingsInFuture, hasSize(1));
+        assertThat(bookingsInFuture.get(0).getId(), equalTo(2L));
+    }
+
+    @Test
+    void testGetAllBookingsOfOwnerCurrent() throws InterruptedException {
+        TimeUnit.SECONDS.sleep(5);
+        List<BookingResponseDto> bookingsCurrent = bookingService
+                .getAllBookingsOfOwnerByState(1L, "CURRENT", 0, 10);
+        assertThat(bookingsCurrent, hasSize(1));
+        assertThat(bookingsCurrent.get(0).getId(), equalTo(3L));
     }
 
     private User setUser(Long id, String name, String email) {
@@ -72,5 +114,10 @@ public class BookingServiceUnitTest {
         user.setName(name);
         user.setEmail(email);
         return user;
+    }
+
+    private BookingShort setBooking(Long id, LocalDateTime start) {
+        return new BookingShort(id, start, start.plusDays(1),
+                BookingStatus.APPROVED, new UserShort(1L), new ItemShort(1L, "Item"));
     }
 }
