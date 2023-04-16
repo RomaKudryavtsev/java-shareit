@@ -30,12 +30,16 @@ public class RequestServiceImpl implements RequestService {
 
     private void checkIfUserExists(Long userId) {
         userRepo.findById(userId)
-                .orElseThrow(() -> {throw new UserNotFoundException("User does not exist");});
+                .orElseThrow(() -> {
+                    throw new UserNotFoundException("User does not exist");
+                });
     }
 
     private void checkIfRequestExists(Long requestId) {
         requestRepo.findById(requestId)
-                .orElseThrow(() -> {throw new RequestNotFoundException("Request does not exist");});
+                .orElseThrow(() -> {
+                    throw new RequestNotFoundException("Request does not exist");
+                });
     }
 
     @Override
@@ -45,7 +49,9 @@ public class RequestServiceImpl implements RequestService {
         ItemRequest newRequest = ItemRequestMapper.mapDtoToModel(itemRequestDto);
         newRequest.setCreated(now);
         newRequest.setUser(userRepo.findById(userId)
-                .orElseThrow(() -> {throw new UserNotFoundException("User does not exist");}));
+                .orElseThrow(() -> {
+                    throw new UserNotFoundException("User does not exist");
+                }));
         ItemRequest addedRequest = requestRepo.save(newRequest);
         return ItemRequestMapper.mapModelToDto(addedRequest);
     }
