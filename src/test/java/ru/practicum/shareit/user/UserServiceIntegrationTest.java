@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import ru.practicum.shareit.exception.EmptyEmailException;
 import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
@@ -45,6 +46,8 @@ public class UserServiceIntegrationTest {
     void testAddUserDuplicativeEmail() {
         User user = setUser("user", "user@user.com");
         Assertions.assertThrows(DataIntegrityViolationException.class, () -> userService.addUser(user));
+        User userWithEmptyEmail = setUser("user", null);
+        Assertions.assertThrows(EmptyEmailException.class, () -> userService.addUser(userWithEmptyEmail));
     }
 
     @Test
