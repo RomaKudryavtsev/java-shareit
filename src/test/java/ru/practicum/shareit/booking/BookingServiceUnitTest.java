@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,6 +15,7 @@ import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.projection.BookingShort;
 import ru.practicum.shareit.booking.repo.BookingRepo;
 import ru.practicum.shareit.booking.service.BookingServiceImpl;
+import ru.practicum.shareit.exception.WrongStatusException;
 import ru.practicum.shareit.item.projection.ItemShort;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.projection.UserShort;
@@ -54,8 +56,12 @@ public class BookingServiceUnitTest {
 
         Mockito.lenient().when(bookingRepoMock.findAllByBookerIdOrderByStartDesc(Mockito.anyLong(), Mockito.any()))
                 .thenReturn(page);
+        Mockito.lenient().when(bookingRepoMock.findAllByBookerIdAndStatusOrderByStartDesc(Mockito.anyLong(),
+                Mockito.any(), Mockito.any())).thenReturn(page);
         Mockito.lenient().when(bookingRepoMock.findAllByOwnerIdOrderByStartDesc(Mockito.anyLong(), Mockito.any()))
                 .thenReturn(page);
+        Mockito.lenient().when(bookingRepoMock.findAllByOwnerIdAndStatusOrderByStartDesc(Mockito.anyLong(),
+                Mockito.any(), Mockito.any())).thenReturn(page);
     }
 
     @Test
@@ -84,6 +90,20 @@ public class BookingServiceUnitTest {
     }
 
     @Test
+    void testGetAllBookingsOfBooker() {
+        List<BookingResponseDto> bookingsAll = bookingService
+                .getAllBookingsOfBookerByState(1L, "ALL", 0, 10);
+        assertThat(bookingsAll, hasSize(3));
+    }
+
+    @Test
+    void testGetAllBookingsOfBookerApproved() {
+        List<BookingResponseDto> bookingsApproved = bookingService
+                .getAllBookingsOfBookerByState(1L, "APPROVED", 0, 10);
+        assertThat(bookingsApproved, hasSize(3));
+    }
+
+    @Test
     void testGetAllBookingsOfOwnerPast() {
         List<BookingResponseDto> bookingsInPast = bookingService
                 .getAllBookingsOfOwnerByState(1L, "PAST", 0, 10);
@@ -106,6 +126,26 @@ public class BookingServiceUnitTest {
                 .getAllBookingsOfOwnerByState(1L, "CURRENT", 0, 10);
         assertThat(bookingsCurrent, hasSize(1));
         assertThat(bookingsCurrent.get(0).getId(), equalTo(3L));
+    }
+
+    @Test
+    void testGetAllBookingsOfOwner() {
+        List<BookingResponseDto> bookingsAll = bookingService
+                .getAllBookingsOfOwnerByState(1L, "ALL", 0, 10);
+        assertThat(bookingsAll, hasSize(3));
+    }
+
+    @Test
+    void testGetAllBookingsOfOwnerApproved() {
+        List<BookingResponseDto> bookingsApproved = bookingService
+                .getAllBookingsOfOwnerByState(1L, "APPROVED", 0, 10);
+        assertThat(bookingsApproved, hasSize(3));
+    }
+
+    @Test
+    void testGetAllBookingsWrongStatusFail() {
+        Assertions.assertThrows(WrongStatusException.class,
+                () -> bookingService.getAllBookingsOfBookerByState(1L, "UNKNOWN", 0, 10));
     }
 
     private User setUser(Long id, String name, String email) {
