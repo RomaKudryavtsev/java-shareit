@@ -46,17 +46,8 @@ public class BookingControllerTest {
 
     @BeforeEach
     void setUp() {
-        bookingRequest.setItemId(1L);
-        bookingRequest.setStart(start);
-        bookingRequest.setEnd(end);
-        bookingResponse = BookingResponseDto.builder()
-                .id(1L)
-                .start(start)
-                .end(end)
-                .status(BookingStatus.WAITING)
-                .booker(new UserShort(1L))
-                .item(new ItemShort(1L, "item"))
-                .build();
+        setBookingRequest();
+        setBookingResponse();
     }
 
     @Test
@@ -138,5 +129,22 @@ public class BookingControllerTest {
                 .andExpect(jsonPath("$[0].booker.id", is(bookingResponse.getBooker().getId().intValue())))
                 .andExpect(jsonPath("$[0].item.id", is(bookingResponse.getItem().getId().intValue())))
                 .andExpect(jsonPath("$[0].item.name", is(bookingResponse.getItem().getName())));
+    }
+
+    private void setBookingRequest() {
+        bookingRequest.setItemId(1L);
+        bookingRequest.setStart(start);
+        bookingRequest.setEnd(end);
+    }
+
+    private void setBookingResponse() {
+        bookingResponse = BookingResponseDto.builder()
+                .id(1L)
+                .start(start)
+                .end(end)
+                .status(BookingStatus.WAITING)
+                .booker(new UserShort(1L))
+                .item(new ItemShort(1L, "item"))
+                .build();
     }
 }

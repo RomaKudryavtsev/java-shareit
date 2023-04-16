@@ -47,32 +47,15 @@ public class BookingRepoTest {
 
     @BeforeEach
     void setUp() {
-        owner = new User();
-        owner.setName("John Sharer");
-        owner.setEmail("js@gmail.com");
-        booker = new User();
-        booker.setName("James Booker");
-        booker.setEmail("jb@gmail.com");
+        owner = setUser("John Sharer", "js@gmail.com");
+        booker = setUser("James Booker", "jb@gmail.com");
         userRepo.save(owner);
         userRepo.save(booker);
-        ItemRequest request = new ItemRequest();
-        request.setDescription("Request for test item");
-        request.setUser(owner);
+        ItemRequest request = setRequest("Request for test item", owner);
         requestRepo.save(request);
-        item = new Item();
-        item.setName("Test item");
-        item.setDescription("New available test item");
-        item.setOwnerId(owner.getId());
-        item.setAvailable(true);
-        item.setRequest(request);
-        item.setComments(null);
+        item = setItem(owner, request);
         itemRepo.save(item);
-        booking = new Booking();
-        booking.setStart(LocalDateTime.now());
-        booking.setEnd(LocalDateTime.now().plusDays(1));
-        booking.setStatus(BookingStatus.WAITING);
-        booking.setItem(item);
-        booking.setBooker(booker);
+        booking = setBooking(booker, item);
         bookingRepo.save(booking);
     }
 
@@ -137,5 +120,40 @@ public class BookingRepoTest {
         Assertions.assertEquals(booking.getStatus(), bookings.getContent().get(0).getStatus());
         Assertions.assertEquals(booker.getId(), bookings.getContent().get(0).getBooker().getId());
         Assertions.assertEquals(item.getId(), bookings.getContent().get(0).getItem().getId());
+    }
+
+    private User setUser(String name, String email) {
+        User user = new User();
+        user.setName(name);
+        user.setEmail(email);
+        return user;
+    }
+
+    private ItemRequest setRequest(String description, User user) {
+        ItemRequest request = new ItemRequest();
+        request.setDescription(description);
+        request.setUser(user);
+        return request;
+    }
+
+    private Item setItem(User user, ItemRequest request) {
+        Item item = new Item();
+        item.setName("Test item");
+        item.setDescription("New available test item");
+        item.setOwnerId(user.getId());
+        item.setAvailable(true);
+        item.setRequest(request);
+        item.setComments(null);
+        return item;
+    }
+
+    private Booking setBooking(User user, Item item) {
+        Booking bookingPrep = new Booking();
+        bookingPrep.setStart(LocalDateTime.now());
+        bookingPrep.setEnd(LocalDateTime.now().plusDays(1));
+        bookingPrep.setStatus(BookingStatus.WAITING);
+        bookingPrep.setItem(item);
+        bookingPrep.setBooker(user);
+        return bookingPrep;
     }
 }

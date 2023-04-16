@@ -7,18 +7,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import ru.practicum.shareit.booking.dto.BookingResponseDto;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.projection.BookingShort;
 import ru.practicum.shareit.booking.repo.BookingRepo;
 import ru.practicum.shareit.booking.service.BookingServiceImpl;
 import ru.practicum.shareit.item.projection.ItemShort;
-import ru.practicum.shareit.item.repo.ItemRepo;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.projection.UserShort;
 import ru.practicum.shareit.user.repo.UserRepo;
@@ -50,10 +46,7 @@ public class BookingServiceUnitTest {
                 .thenReturn(page);
         Mockito.lenient().when(bookingRepoMock.findAllByOwnerIdOrderByStartDesc(Mockito.anyLong(), Mockito.any()))
                 .thenReturn(page);
-        User user = new User();
-        user.setId(1L);
-        user.setName("John Sharer");
-        user.setEmail("js@gmail.com");
+        User user = setUser(1L, "John Sharer", "js@gmail.com");
         Mockito.when(userRepoMock.findById(Mockito.anyLong())).thenReturn(Optional.of(user));
     }
 
@@ -71,5 +64,13 @@ public class BookingServiceUnitTest {
                 .getAllBookingsOfOwnerByState(1L, "PAST", 0, 10);
         assertThat(bookings, hasSize(1));
         assertThat(bookings.get(0).getId(), equalTo(1L));
+    }
+
+    private User setUser(Long id, String name, String email) {
+        User user = new User();
+        user.setId(id);
+        user.setName(name);
+        user.setEmail(email);
+        return user;
     }
 }
