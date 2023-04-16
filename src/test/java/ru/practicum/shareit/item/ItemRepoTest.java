@@ -29,21 +29,11 @@ public class ItemRepoTest {
 
     @BeforeEach
     void setUp() {
-        User owner = new User();
-        owner.setName("John Sharer");
-        owner.setEmail("js@gmail.com");
+        User owner = setUser("John Sharer", "js@gmail.com");
         userRepo.save(owner);
-        ItemRequest request = new ItemRequest();
-        request.setDescription("Request for test item");
-        request.setUser(owner);
+        ItemRequest request = setRequest(owner);
         requestRepo.save(request);
-        item = new Item();
-        item.setName("Test item");
-        item.setDescription("New available test item");
-        item.setOwnerId(owner.getId());
-        item.setAvailable(true);
-        item.setRequest(request);
-        item.setComments(null);
+        item = setItem(owner, request);
         itemRepo.save(item);
     }
 
@@ -74,5 +64,30 @@ public class ItemRepoTest {
     void testUpdateName() {
         item.setName("Updated name");
         Assertions.assertEquals("Updated name", itemRepo.findById(item.getId()).orElseThrow().getName());
+    }
+
+    private User setUser(String name, String email) {
+        User user = new User();
+        user.setName(name);
+        user.setEmail(email);
+        return user;
+    }
+
+    private ItemRequest setRequest(User user) {
+        ItemRequest request = new ItemRequest();
+        request.setDescription("Request for test item");
+        request.setUser(user);
+        return request;
+    }
+
+    private Item setItem(User user, ItemRequest request) {
+        Item item = new Item();
+        item.setName("Test item");
+        item.setDescription("New available test item");
+        item.setOwnerId(user.getId());
+        item.setAvailable(true);
+        item.setRequest(request);
+        item.setComments(null);
+        return item;
     }
 }

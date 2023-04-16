@@ -36,29 +36,15 @@ public class CommentRepoTest {
     private Item item;
     private Comment comment;
 
-
     @BeforeEach
     void setUp() {
-        User owner = new User();
-        owner.setName("John Sharer");
-        owner.setEmail("js@gmail.com");
-        userRepo.save(owner);
-        ItemRequest request = new ItemRequest();
-        request.setDescription("Request for test item");
-        request.setUser(owner);
+        User user = setUser("John Sharer", "js@gmail.com");
+        userRepo.save(user);
+        ItemRequest request = setRequest(user);
         requestRepo.save(request);
-        item = new Item();
-        item.setName("Test item");
-        item.setDescription("New available test item");
-        item.setOwnerId(owner.getId());
-        item.setAvailable(true);
-        item.setRequest(request);
+        item = setItem(user, request);
         itemRepo.save(item);
-        comment = new Comment();
-        comment.setText("Comment");
-        comment.setItem(item);
-        comment.setAuthor(owner);
-        comment.setCreated(LocalDateTime.now());
+        comment = setComment(user, item);
         commentRepo.save(comment);
     }
 
@@ -82,5 +68,38 @@ public class CommentRepoTest {
         Assertions.assertEquals(1L, comments.get(0).getId());
         Assertions.assertEquals("Comment", comments.get(0).getText());
         Assertions.assertEquals("John Sharer", comments.get(0).getAuthorName());
+    }
+
+    private User setUser(String name, String email) {
+        User user = new User();
+        user.setName(name);
+        user.setEmail(email);
+        return user;
+    }
+
+    private ItemRequest setRequest(User user) {
+        ItemRequest request = new ItemRequest();
+        request.setDescription("Request for test item");
+        request.setUser(user);
+        return request;
+    }
+
+    private Item setItem(User user, ItemRequest request) {
+        Item item = new Item();
+        item.setName("Test item");
+        item.setDescription("New available test item");
+        item.setOwnerId(user.getId());
+        item.setAvailable(true);
+        item.setRequest(request);
+        return item;
+    }
+
+    private Comment setComment(User user, Item item) {
+        Comment commentPrep = new Comment();
+        commentPrep.setText("Comment");
+        commentPrep.setItem(item);
+        commentPrep.setAuthor(user);
+        commentPrep.setCreated(LocalDateTime.now());
+        return commentPrep;
     }
 }

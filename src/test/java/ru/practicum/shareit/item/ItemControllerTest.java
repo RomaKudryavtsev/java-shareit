@@ -45,24 +45,9 @@ public class ItemControllerTest {
 
     @BeforeEach
     void setUp() {
-        item = ItemDto.builder()
-                .id(1L)
-                .name("New item")
-                .description("Item description")
-                .available(true)
-                .requestId(1L)
-                .build();
+        item = setItemDto();
         comment = new CommentWithAuthorName(1L, "Comment", "Author", testNow);
-        itemWithInfo = ItemWithLastAndNextBookingAndComments.builder()
-                .id(1L)
-                .ownerId(1L)
-                .name("New item")
-                .description("Item description")
-                .available(true)
-                .nextBooking(new BookingShortForItem(1L, 1L))
-                .lastBooking(new BookingShortForItem(2L, 1L))
-                .comments(List.of(comment))
-                .build();
+        itemWithInfo = setItemFull();
     }
 
     @Test
@@ -168,5 +153,28 @@ public class ItemControllerTest {
                 .andExpect(jsonPath("$[0].description", is(item.getDescription())))
                 .andExpect(jsonPath("$[0].available", is(item.getAvailable())))
                 .andExpect(jsonPath("$[0].requestId", is(item.getRequestId().intValue())));
+    }
+
+    private ItemDto setItemDto() {
+        return ItemDto.builder()
+                .id(1L)
+                .name("New item")
+                .description("Item description")
+                .available(true)
+                .requestId(1L)
+                .build();
+    }
+
+    private ItemWithLastAndNextBookingAndComments setItemFull() {
+        return ItemWithLastAndNextBookingAndComments.builder()
+                .id(1L)
+                .ownerId(1L)
+                .name("New item")
+                .description("Item description")
+                .available(true)
+                .nextBooking(new BookingShortForItem(1L, 1L))
+                .lastBooking(new BookingShortForItem(2L, 1L))
+                .comments(List.of(comment))
+                .build();
     }
 }

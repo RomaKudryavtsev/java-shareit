@@ -47,37 +47,17 @@ public class ItemServiceIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        User owner = new User();
-        owner.setName("John Sharer");
-        owner.setEmail("js@gmail.com");
+        User owner = setUser("John Sharer", "js@gmail.com");
         addedOwner = userService.addUser(owner);
-        User booker = new User();
-        booker.setName("James Booker");
-        booker.setEmail("jb@gmail.com");
+        User booker = setUser("James Booker", "jb@gmail.com");
         User addedBooker = userService.addUser(booker);
-
-        ItemRequestDto requestDto = ItemRequestDto.builder()
-                .description("Request")
-                .build();
+        ItemRequestDto requestDto = setRequestDto("Request");
         ItemRequestDto addedRequest = requestService.addItemRequest(addedBooker.getId(), requestDto);
-
-        ItemDto itemDto = ItemDto.builder()
-                .name("Item name")
-                .description("Item description")
-                .available(true)
-                .requestId(addedRequest.getId())
-                .build();
+        ItemDto itemDto = setItemDto(addedRequest);
         addedItem = itemService.addItem(addedOwner.getId(), itemDto);
-
-        LocalDateTime nextStart = LocalDateTime.now().plusDays(1);
-        LocalDateTime nextEnd = nextStart.plusDays(2);
-        BookingRequestDto bookingDto = new BookingRequestDto();
-        bookingDto.setStart(nextStart);
-        bookingDto.setEnd(nextEnd);
-        bookingDto.setItemId(addedItem.getId());
+        BookingRequestDto bookingDto = setBookingDto(addedItem);
         BookingResponseDto addedBooking = bookingService.addBooking(addedBooker.getId(), bookingDto);
-        approvedBooking = bookingService
-                .setBookingStatus(addedOwner.getId(), addedBooking.getId(), true);
+        approvedBooking = bookingService.setBookingStatus(addedOwner.getId(), addedBooking.getId(), true);
     }
 
     @Test
@@ -93,5 +73,37 @@ public class ItemServiceIntegrationTest {
         assertThat(itemFullAll.get(0).getNextBooking().getBookerId(), equalTo(approvedBooking.getBooker().getId()));
         assertNull(itemFullAll.get(0).getLastBooking());
         assertThat(itemFullAll.get(0).getComments(), hasSize(0));
+    }
+
+    private User setUser(String name, String email) {
+        User user = new User();
+        user.setName(name);
+        user.setEmail(email);
+        return user;
+    }
+
+    private ItemRequestDto setRequestDto(String description) {
+        return ItemRequestDto.builder()
+                .description(description)
+                .build();
+    }
+
+    private ItemDto setItemDto(ItemRequestDto requestDto) {
+        return ItemDto.builder()
+                .name("Item name")
+                .description("Item description")
+                .available(true)
+                .requestId(requestDto.getId())
+                .build();
+    }
+
+    private BookingRequestDto setBookingDto(ItemDto itemDto) {
+        BookingRequestDto bookingDto = new BookingRequestDto();
+        LocalDateTime nextStart = LocalDateTime.now().plusDays(1);
+        LocalDateTime nextEnd = nextStart.plusDays(2);
+        bookingDto.setStart(nextStart);
+        bookingDto.setEnd(nextEnd);
+        bookingDto.setItemId(itemDto.getId());
+        return bookingDto;
     }
 }
