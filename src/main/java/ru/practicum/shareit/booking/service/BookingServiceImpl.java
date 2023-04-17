@@ -1,5 +1,7 @@
 package ru.practicum.shareit.booking.service;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -26,27 +28,28 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BookingServiceImpl implements BookingService {
-    private final BookingRepo bookingRepo;
-    private final UserRepo userRepo;
-    private final ItemRepo itemRepo;
-    private final Supplier<BookingNotFoundException> bookingNotFoundSupplier =
+    BookingRepo bookingRepo;
+    UserRepo userRepo;
+    ItemRepo itemRepo;
+    Supplier<BookingNotFoundException> bookingNotFoundSupplier =
             () -> {
                 throw new BookingNotFoundException("Booking does not exist");
             };
-    private final Supplier<UserNotFoundException> userNotFoundSupplier =
+    Supplier<UserNotFoundException> userNotFoundSupplier =
             () -> {
                 throw new UserNotFoundException("User does not exist");
             };
-    private final Supplier<ItemNotFoundException> itemNotFoundSupplier =
+    Supplier<ItemNotFoundException> itemNotFoundSupplier =
             () -> {
                 throw new ItemNotFoundException("Item does not exist");
             };
-    private final Function<LocalDateTime, Predicate<BookingShort>> currentBookingsFunction = now ->
+    Function<LocalDateTime, Predicate<BookingShort>> currentBookingsFunction = now ->
             b -> b.getStart().isBefore(now) && b.getEnd().isAfter(now);
-    private final Function<LocalDateTime, Predicate<BookingShort>> pastBookingsFunction = now ->
+    Function<LocalDateTime, Predicate<BookingShort>> pastBookingsFunction = now ->
             b -> b.getEnd().isBefore(now);
-    private final Function<LocalDateTime, Predicate<BookingShort>> futureBookingsFunction = now ->
+    Function<LocalDateTime, Predicate<BookingShort>> futureBookingsFunction = now ->
             b -> b.getStart().isAfter(now);
 
 

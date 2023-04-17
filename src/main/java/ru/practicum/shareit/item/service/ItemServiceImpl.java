@@ -1,5 +1,7 @@
 package ru.practicum.shareit.item.service;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,12 +28,13 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ItemServiceImpl implements ItemService {
-    private final ItemRepo itemRepo;
-    private final UserRepo userRepo;
-    private final CommentRepo commentRepo;
-    private final RequestRepo requestRepo;
-    private final Function<LocalDateTime, Predicate<Booking>> nonFutureBookingsFunction = now ->
+    ItemRepo itemRepo;
+    UserRepo userRepo;
+    CommentRepo commentRepo;
+    RequestRepo requestRepo;
+    Function<LocalDateTime, Predicate<Booking>> nonFutureBookingsFunction = now ->
             b -> !b.getStart().isAfter(now);
 
     @Autowired

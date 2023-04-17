@@ -1,5 +1,7 @@
 package ru.practicum.shareit.request.service;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,9 +20,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RequestServiceImpl implements RequestService {
-    private final RequestRepo requestRepo;
-    private final UserRepo userRepo;
+    RequestRepo requestRepo;
+    UserRepo userRepo;
 
     @Autowired
     public RequestServiceImpl(RequestRepo requestRepo, UserRepo userRepo) {

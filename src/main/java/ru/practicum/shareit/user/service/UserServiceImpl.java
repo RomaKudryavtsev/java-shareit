@@ -1,5 +1,7 @@
 package ru.practicum.shareit.user.service;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,8 +15,9 @@ import java.util.List;
 
 @Service
 @Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserServiceImpl implements UserService {
-    private final UserRepo userRepo;
+    UserRepo userRepo;
 
     @Autowired
     public UserServiceImpl(UserRepo userRepo) {
