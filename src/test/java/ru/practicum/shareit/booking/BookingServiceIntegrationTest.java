@@ -1,5 +1,7 @@
 package ru.practicum.shareit.booking;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,22 +33,23 @@ import static org.hamcrest.Matchers.equalTo;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookingServiceIntegrationTest {
     @Autowired
-    private EntityManager em;
+    EntityManager em;
     @Autowired
-    private ItemService itemService;
+    ItemService itemService;
     @Autowired
-    private UserService userService;
+    UserService userService;
     @Autowired
-    private RequestService requestService;
+    RequestService requestService;
     @Autowired
-    private BookingService bookingService;
-    private User addedOwner;
-    private User addedBooker;
-    private ItemRequestDto addedRequest;
-    private ItemDto addedItem;
-    private BookingResponseDto addedBooking;
+    BookingService bookingService;
+    User addedOwner;
+    User addedBooker;
+    ItemRequestDto addedRequest;
+    ItemDto addedItem;
+    BookingResponseDto addedBooking;
 
     @BeforeEach
     void setUp() {

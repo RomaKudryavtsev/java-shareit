@@ -1,5 +1,7 @@
 package ru.practicum.shareit.item;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,19 +24,20 @@ import java.util.List;
 
 @DataJpaTest
 @AutoConfigureTestDatabase
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CommentRepoTest {
     @Autowired
-    private TestEntityManager em;
+    TestEntityManager em;
     @Autowired
-    private UserRepo userRepo;
+    UserRepo userRepo;
     @Autowired
-    private CommentRepo commentRepo;
+    CommentRepo commentRepo;
     @Autowired
-    private ItemRepo itemRepo;
+    ItemRepo itemRepo;
     @Autowired
-    private RequestRepo requestRepo;
-    private Item item;
-    private Comment comment;
+    RequestRepo requestRepo;
+    Item item;
+    Comment comment;
 
     @BeforeEach
     void setUp() {

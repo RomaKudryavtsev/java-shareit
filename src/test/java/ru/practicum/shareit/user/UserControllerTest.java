@@ -1,6 +1,8 @@
 package ru.practicum.shareit.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,14 +31,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @SpringBootTest
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserControllerTest {
     @Autowired
     ObjectMapper mapper;
     @MockBean
     UserService userService;
     @Autowired
-    private MockMvc mvc;
-    private final User user = new User();
+    MockMvc mvc;
+    final User user = new User();
 
     @BeforeEach
     void setUp() {

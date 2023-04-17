@@ -1,6 +1,8 @@
 package ru.practicum.shareit.item;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,13 +34,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @SpringBootTest
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemControllerTest {
     @Autowired
     ObjectMapper mapper;
     @MockBean
     ItemService itemService;
     @Autowired
-    private MockMvc mvc;
+    MockMvc mvc;
     ItemDto item;
     CommentWithAuthorName comment;
     ItemWithLastAndNextBookingAndComments itemWithInfo;

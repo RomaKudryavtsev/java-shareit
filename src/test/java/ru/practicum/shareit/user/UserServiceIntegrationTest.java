@@ -1,5 +1,7 @@
 package ru.practicum.shareit.user;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,12 +27,13 @@ import static org.hamcrest.Matchers.hasSize;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserServiceIntegrationTest {
     @Autowired
-    private EntityManager em;
+    EntityManager em;
     @Autowired
-    private UserService userService;
-    private User addedUser;
+    UserService userService;
+    User addedUser;
 
     @BeforeEach
     void setUp() {

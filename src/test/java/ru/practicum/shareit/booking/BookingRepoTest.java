@@ -1,5 +1,7 @@
 package ru.practicum.shareit.booking;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,22 +30,23 @@ import static ru.practicum.shareit.booking.model.BookingStatus.WAITING;
 
 @DataJpaTest
 @AutoConfigureTestDatabase
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookingRepoTest {
     @Autowired
-    private BookingRepo bookingRepo;
+    BookingRepo bookingRepo;
     @Autowired
-    private TestEntityManager em;
+    TestEntityManager em;
     @Autowired
-    private ItemRepo itemRepo;
+    ItemRepo itemRepo;
     @Autowired
-    private UserRepo userRepo;
+    UserRepo userRepo;
     @Autowired
-    private RequestRepo requestRepo;
-    private Booking booking;
-    private User booker;
-    private User owner;
-    private Item item;
-    private final Pageable request = PageRequest.of(0, 10);
+    RequestRepo requestRepo;
+    Booking booking;
+    User booker;
+    User owner;
+    Item item;
+    final Pageable request = PageRequest.of(0, 10);
 
     @BeforeEach
     void setUp() {

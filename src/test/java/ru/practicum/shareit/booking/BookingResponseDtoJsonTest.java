@@ -1,5 +1,7 @@
 package ru.practicum.shareit.booking;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJson;
@@ -19,9 +21,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @AutoConfigureJson
 @AutoConfigureJsonTesters
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookingResponseDtoJsonTest {
     @Autowired
-    private JacksonTester<BookingResponseDto> json;
+    JacksonTester<BookingResponseDto> json;
 
     @Test
     void testUserDto() throws Exception {

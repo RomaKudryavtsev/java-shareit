@@ -1,5 +1,7 @@
 package ru.practicum.shareit.user;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,12 +14,13 @@ import ru.practicum.shareit.user.repo.UserRepo;
 
 @DataJpaTest
 @AutoConfigureTestDatabase
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserRepoTest {
     @Autowired
-    private TestEntityManager em;
+    TestEntityManager em;
     @Autowired
-    private UserRepo userRepo;
-    private User user;
+    UserRepo userRepo;
+    User user;
 
     @BeforeEach
     void setUp() {

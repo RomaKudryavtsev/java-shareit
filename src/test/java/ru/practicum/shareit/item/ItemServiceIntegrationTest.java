@@ -1,5 +1,7 @@
 package ru.practicum.shareit.item;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,22 +38,23 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemServiceIntegrationTest {
     @Autowired
-    private EntityManager em;
+    EntityManager em;
     @Autowired
-    private ItemService itemService;
+    ItemService itemService;
     @Autowired
-    private UserService userService;
+    UserService userService;
     @Autowired
-    private RequestService requestService;
+    RequestService requestService;
     @Autowired
-    private BookingService bookingService;
-    private ItemDto addedItem;
-    private User addedOwner;
-    private User addedBooker;
-    private BookingResponseDto approvedBooking;
-    private ItemRequestDto addedRequest;
+    BookingService bookingService;
+    ItemDto addedItem;
+    User addedOwner;
+    User addedBooker;
+    BookingResponseDto approvedBooking;
+    ItemRequestDto addedRequest;
 
     @BeforeEach
     void setUp() {
