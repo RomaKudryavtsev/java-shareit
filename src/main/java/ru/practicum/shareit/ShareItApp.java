@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @EntityScan
 public class ShareItApp {
-
+// Pre-refactor
     public static void main(String[] args) {
         SpringApplication.run(ShareItApp.class, args);
     }
