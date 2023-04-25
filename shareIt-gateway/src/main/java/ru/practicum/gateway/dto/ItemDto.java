@@ -1,19 +1,22 @@
 package ru.practicum.gateway.dto;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import javax.validation.constraints.Email;
-
 @Data
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class User {
+public class ItemDto {
     Long id;
     String name;
-    @Email
-    String email;
+    String description;
+    Boolean available;
+    Long requestId;
+
+    public Boolean getAvailable() {
+        return available;
+    }
 }

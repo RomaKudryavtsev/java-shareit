@@ -57,8 +57,7 @@ public class UserClient extends BaseClient {
     public Mono<List<User>> getAllUsers() {
         return webClient.get()
                 .uri(baseUrl + USER_URI)
-                .retrieve().bodyToMono(new ParameterizedTypeReference<List<User>>() {
-                });
+                .retrieve().bodyToFlux(User.class).collectList();
     }
 
     public Mono<Void> deleteUserById(Long userId) {
