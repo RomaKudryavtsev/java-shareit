@@ -12,7 +12,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/bookings")
-@Validated
 public class BookingController {
     private final BookingService bookingService;
     private static final String USER_HEADER = "X-Sharer-User-Id";
@@ -44,17 +43,16 @@ public class BookingController {
     @GetMapping
     public List<BookingResponseDto> getAllBookingsOfBookerByState(@RequestHeader(USER_HEADER) Long bookerId,
                                                                   @RequestParam(defaultValue = "ALL", required = false) String state,
-                                                                  @RequestParam(required = false, defaultValue = "0") @PositiveOrZero int from,
-                                                                  @RequestParam(required = false, defaultValue = "10") @PositiveOrZero int size) {
+                                                                  @RequestParam(required = false, defaultValue = "0") int from,
+                                                                  @RequestParam(required = false, defaultValue = "10") int size) {
         return bookingService.getAllBookingsOfBookerByState(bookerId, state, from, size);
     }
 
     @GetMapping("/owner")
     public List<BookingResponseDto> getAllBookingsOfOwnerByState(@RequestHeader(USER_HEADER) Long ownerId,
                                                                  @RequestParam(defaultValue = "ALL", required = false) String state,
-                                                                 @RequestParam(required = false, defaultValue = "0") @PositiveOrZero int from,
-                                                                 @RequestParam(required = false, defaultValue = "10") @PositiveOrZero int size) {
+                                                                 @RequestParam(required = false, defaultValue = "0") int from,
+                                                                 @RequestParam(required = false, defaultValue = "10") int size) {
         return bookingService.getAllBookingsOfOwnerByState(ownerId, state, from, size);
     }
-
 }
