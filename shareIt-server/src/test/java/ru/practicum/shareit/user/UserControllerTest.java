@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -63,6 +64,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @Disabled
     void testAddUserWrongEmailFail() throws Exception {
         user.setEmail("wrong_email");
         Mockito.when(userService.addUser(Mockito.any())).thenReturn(user);

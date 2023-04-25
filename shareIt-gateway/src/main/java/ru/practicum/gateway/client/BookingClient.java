@@ -1,4 +1,4 @@
 package ru.practicum.gateway.client;
 
-public class BookingClient {
+public class BookingClient extends BaseClient {
 }

@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.service.UserService;
 import ru.practicum.shareit.user.model.User;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -21,13 +20,13 @@ public class UserController {
     }
 
     @PostMapping
-    public User addUser(@Valid @RequestBody User user) {
+    public User addUser(@RequestBody User user) {
         return userService.addUser(user);
     }
 
     @PatchMapping(value = ALTER_USER_PATH)
     @Transactional
-    public User updateUser(@PathVariable("id") Long userId, @Valid @RequestBody User user) {
+    public User updateUser(@PathVariable("id") Long userId, @RequestBody User user) {
         return userService.updateUser(userId, user);
     }
 

@@ -1,4 +1,4 @@
 package ru.practicum.gateway.client;
 
-public class RequestClient {
+public class RequestClient extends BaseClient {
 }

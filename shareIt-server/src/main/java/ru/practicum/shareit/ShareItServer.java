@@ -10,9 +10,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableJpaRepositories
 @EnableTransactionManagement
 @EntityScan
-public class ShareItApp {
+public class ShareItServer {
     public static void main(String[] args) {
-        SpringApplication.run(ShareItApp.class, args);
+        SpringApplication.run(ShareItServer.class, args);
     }
 
 }
