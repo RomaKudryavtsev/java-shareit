@@ -5,8 +5,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 import ru.practicum.gateway.client.BookingClient;
-import ru.practicum.gateway.dto.BookingRequestDto;
-import ru.practicum.gateway.dto.BookingResponseDto;
+import ru.practicum.gateway.dto.booking.BookingRequestDto;
+import ru.practicum.gateway.dto.booking.BookingResponseDto;
 
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;

@@ -5,8 +5,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 import ru.practicum.gateway.client.RequestClient;
-import ru.practicum.gateway.dto.ItemRequestDto;
-import ru.practicum.gateway.dto.ItemRequestWithItemsDto;
+import ru.practicum.gateway.dto.item.ItemRequestDto;
+import ru.practicum.gateway.dto.item.ItemRequestWithItemsDto;
 
 import javax.validation.Valid;
 import javax.validation.constraints.PositiveOrZero;

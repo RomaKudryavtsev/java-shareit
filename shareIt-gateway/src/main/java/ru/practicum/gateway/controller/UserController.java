@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 import ru.practicum.gateway.client.UserClient;
-import ru.practicum.gateway.dto.User;
+import ru.practicum.gateway.dto.user.User;
 
 import javax.validation.Valid;
 import java.util.List;

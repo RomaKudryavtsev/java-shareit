@@ -1,4 +1,4 @@
-package ru.practicum.gateway.dto;
+package ru.practicum.gateway.dto.item;
 
 import lombok.AccessLevel;
 import lombok.Builder;

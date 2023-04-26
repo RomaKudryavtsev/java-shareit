@@ -2,10 +2,11 @@ package ru.practicum.gateway.client;
 
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-import ru.practicum.gateway.dto.CommentWithAuthorName;
-import ru.practicum.gateway.dto.CommentsDto;
-import ru.practicum.gateway.dto.ItemDto;
-import ru.practicum.gateway.dto.ItemWithLastAndNextBookingAndComments;
+import ru.practicum.gateway.client.domain.BaseClient;
+import ru.practicum.gateway.dto.comments.CommentWithAuthorName;
+import ru.practicum.gateway.dto.comments.CommentsDto;
+import ru.practicum.gateway.dto.item.ItemDto;
+import ru.practicum.gateway.dto.item.ItemWithLastAndNextBookingAndComments;
 import ru.practicum.gateway.exception.MonoException;
 
 import java.util.List;

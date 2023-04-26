@@ -1,17 +1,19 @@
-package ru.practicum.gateway.dto;
+package ru.practicum.gateway.dto.user;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDateTime;
+import javax.validation.constraints.Email;
 
 @Data
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ItemRequestDto {
+public class User {
     Long id;
-    String description;
-    LocalDateTime created;
+    String name;
+    @Email
+    String email;
 }

@@ -1,10 +1,10 @@
 package ru.practicum.gateway.client;
 
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-import ru.practicum.gateway.dto.User;
+import ru.practicum.gateway.client.domain.BaseClient;
+import ru.practicum.gateway.dto.user.User;
 import ru.practicum.gateway.exception.MonoException;
 
 import java.util.List;

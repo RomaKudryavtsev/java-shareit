@@ -4,10 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 import ru.practicum.gateway.client.ItemClient;
-import ru.practicum.gateway.dto.CommentWithAuthorName;
-import ru.practicum.gateway.dto.CommentsDto;
-import ru.practicum.gateway.dto.ItemDto;
-import ru.practicum.gateway.dto.ItemWithLastAndNextBookingAndComments;
+import ru.practicum.gateway.dto.comments.CommentWithAuthorName;
+import ru.practicum.gateway.dto.comments.CommentsDto;
+import ru.practicum.gateway.dto.item.ItemDto;
+import ru.practicum.gateway.dto.item.ItemWithLastAndNextBookingAndComments;
 
 import javax.validation.Valid;
 import java.util.List;

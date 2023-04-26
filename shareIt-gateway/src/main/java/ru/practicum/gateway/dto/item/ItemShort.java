@@ -1,18 +1,14 @@
-package ru.practicum.gateway.dto;
+package ru.practicum.gateway.dto.item;
 
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDateTime;
-
 @Data
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CommentWithAuthorName {
+public class ItemShort {
     Long id;
-    String text;
-    String authorName;
-    LocalDateTime created;
+    String name;
 }

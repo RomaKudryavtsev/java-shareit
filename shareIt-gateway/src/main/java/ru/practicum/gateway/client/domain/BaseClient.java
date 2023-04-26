@@ -1,4 +1,4 @@
-package ru.practicum.gateway.client;
+package ru.practicum.gateway.client.domain;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

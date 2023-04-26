@@ -2,8 +2,9 @@ package ru.practicum.gateway.client;
 
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-import ru.practicum.gateway.dto.ItemRequestDto;
-import ru.practicum.gateway.dto.ItemRequestWithItemsDto;
+import ru.practicum.gateway.client.domain.BaseClient;
+import ru.practicum.gateway.dto.item.ItemRequestDto;
+import ru.practicum.gateway.dto.item.ItemRequestWithItemsDto;
 import ru.practicum.gateway.exception.MonoException;
 
 import java.util.List;

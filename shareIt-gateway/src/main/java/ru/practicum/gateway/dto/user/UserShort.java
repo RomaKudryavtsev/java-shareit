@@ -1,4 +1,4 @@
-package ru.practicum.gateway.dto;
+package ru.practicum.gateway.dto.user;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -8,7 +8,6 @@ import lombok.experimental.FieldDefaults;
 @Data
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ItemShort {
+public class UserShort {
     Long id;
-    String name;
 }

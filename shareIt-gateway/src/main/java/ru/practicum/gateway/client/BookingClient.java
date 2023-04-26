@@ -2,9 +2,10 @@ package ru.practicum.gateway.client;
 
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-import ru.practicum.gateway.dto.BookingRequestDto;
-import ru.practicum.gateway.dto.BookingResponseDto;
-import ru.practicum.gateway.dto.BookingStatus;
+import ru.practicum.gateway.client.domain.BaseClient;
+import ru.practicum.gateway.dto.booking.BookingRequestDto;
+import ru.practicum.gateway.dto.booking.BookingResponseDto;
+import ru.practicum.gateway.dto.booking.BookingStatus;
 import ru.practicum.gateway.exception.MonoException;
 import ru.practicum.gateway.exception.WrongStatusException;
 
