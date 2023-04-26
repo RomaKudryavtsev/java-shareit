@@ -32,7 +32,7 @@ public class ItemClient extends BaseClient {
 
     public Mono<CommentWithAuthorName> addComment(Long userId, Long itemId, CommentsDto commentsDto) {
         return webClient.post()
-                .uri(baseUrl + ITEM_URI + itemId + "/comments")
+                .uri(baseUrl + ITEM_URI + itemId + "/comment")
                 .bodyValue(commentsDto)
                 .header(USER_HEADER, userId.toString())
                 .exchangeToMono(response -> {
