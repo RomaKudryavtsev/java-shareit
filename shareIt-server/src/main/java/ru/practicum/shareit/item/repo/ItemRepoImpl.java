@@ -59,6 +59,7 @@ public class ItemRepoImpl implements ItemRepoCustom {
     public List<ItemWithLastAndNextBookingAndComments> findAllWithLastAndNextBookingAndComments(Long ownerId, LocalDateTime now) {
         List<Item> ownersItems = itemRepo.findAllByOwnerId(ownerId);
         return ownersItems.stream().map(item -> findItemWithLastAndNextBookingAndComments(item.getId(), now, true))
+                .sorted(Comparator.comparing(ItemWithLastAndNextBookingAndComments::getId))
                 .collect(Collectors.toList());
     }
 
