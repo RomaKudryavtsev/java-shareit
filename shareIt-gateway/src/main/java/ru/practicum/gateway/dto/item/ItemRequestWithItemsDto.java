@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.gateway.dto.item.ItemDto;
 
 import java.time.LocalDateTime;
 import java.util.List;

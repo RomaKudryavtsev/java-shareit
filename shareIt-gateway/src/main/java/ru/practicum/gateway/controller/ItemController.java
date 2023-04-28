@@ -32,13 +32,13 @@ public class ItemController {
 
     @PostMapping(value = SPECIFIC_ITEM_PATH + "/comment")
     public Mono<CommentWithAuthorName> addComment(@RequestHeader(USER_HEADER) Long userId, @PathVariable("id") Long itemId,
-                                            @RequestBody @Valid CommentsDto commentsDto) {
+                                                  @RequestBody @Valid CommentsDto commentsDto) {
         return client.addComment(userId, itemId, commentsDto);
     }
 
     @PatchMapping(value = SPECIFIC_ITEM_PATH)
     public Mono<ItemDto> updateItem(@RequestHeader(USER_HEADER) Long ownerId, @PathVariable("id") Long itemId,
-                              @RequestBody ItemDto itemDto) {
+                                    @RequestBody ItemDto itemDto) {
         return client.updateItem(ownerId, itemId, itemDto);
     }
 

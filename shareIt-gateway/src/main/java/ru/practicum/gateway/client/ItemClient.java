@@ -13,7 +13,7 @@ import java.util.List;
 
 @Service
 public class ItemClient extends BaseClient {
-    private final static String ITEM_URI = "/items/";
+    private static final String ITEM_URI = "/items/";
     private static final String USER_HEADER = "X-Sharer-User-Id";
 
     public Mono<ItemDto> addItem(Long userId, ItemDto itemDto) {

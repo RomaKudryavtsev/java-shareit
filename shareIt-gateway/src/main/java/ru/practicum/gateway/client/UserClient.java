@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service
 public class UserClient extends BaseClient {
-    private final static String USER_URI = "/users/";
+    private static final String USER_URI = "/users/";
 
     public Mono<User> addUser(User user) {
         return webClient.post()

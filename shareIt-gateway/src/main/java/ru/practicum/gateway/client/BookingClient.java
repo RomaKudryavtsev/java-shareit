@@ -16,7 +16,7 @@ public class BookingClient extends BaseClient {
     private static final String BOOKING_URI = "/bookings/";
     private static final String USER_HEADER = "X-Sharer-User-Id";
 
-    private void checkStatus (String state) {
+    private void checkStatus(String state) {
         try {
             BookingStatus.valueOf(state);
         } catch (IllegalArgumentException e) {

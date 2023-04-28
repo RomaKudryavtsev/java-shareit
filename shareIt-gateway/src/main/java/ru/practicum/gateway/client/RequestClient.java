@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service
 public class RequestClient extends BaseClient {
-    private final static String REQUEST_URI = "/requests/";
+    private static final String REQUEST_URI = "/requests/";
     private static final String USER_HEADER = "X-Sharer-User-Id";
 
     public Mono<ItemRequestDto> addItemRequest(Long userId, ItemRequestDto itemRequestDto) {

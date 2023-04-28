@@ -32,29 +32,29 @@ public class BookingController {
 
     @PatchMapping(value = BOOKING_PATH)
     public Mono<BookingResponseDto> setBookingStatus(@RequestHeader(USER_HEADER) Long userId,
-                                               @PathVariable("bookingId") Long id, @RequestParam Boolean approved) {
+                                                     @PathVariable("bookingId") Long id, @RequestParam Boolean approved) {
         return client.setBookingStatus(userId, id, approved);
     }
 
     @GetMapping(BOOKING_PATH)
     public Mono<BookingResponseDto> getBookingById(@RequestHeader(USER_HEADER) Long userId,
-                                             @PathVariable("bookingId") Long id) {
+                                                   @PathVariable("bookingId") Long id) {
         return client.getBookingById(userId, id);
     }
 
     @GetMapping
     public Mono<List<BookingResponseDto>> getAllBookingsOfBookerByState(@RequestHeader(USER_HEADER) Long bookerId,
-                                                                  @RequestParam(defaultValue = "ALL", required = false) String state,
-                                                                  @RequestParam(required = false, defaultValue = "0") @PositiveOrZero int from,
-                                                                  @RequestParam(required = false, defaultValue = "10") @PositiveOrZero int size) {
+                                                                        @RequestParam(defaultValue = "ALL", required = false) String state,
+                                                                        @RequestParam(required = false, defaultValue = "0") @PositiveOrZero int from,
+                                                                        @RequestParam(required = false, defaultValue = "10") @PositiveOrZero int size) {
         return client.getAllBookingsOfBookerByState(bookerId, state, from, size);
     }
 
     @GetMapping("/owner")
     public Mono<List<BookingResponseDto>> getAllBookingsOfOwnerByState(@RequestHeader(USER_HEADER) Long ownerId,
-                                                                 @RequestParam(defaultValue = "ALL", required = false) String state,
-                                                                 @RequestParam(required = false, defaultValue = "0") @PositiveOrZero int from,
-                                                                 @RequestParam(required = false, defaultValue = "10") @PositiveOrZero int size) {
+                                                                       @RequestParam(defaultValue = "ALL", required = false) String state,
+                                                                       @RequestParam(required = false, defaultValue = "0") @PositiveOrZero int from,
+                                                                       @RequestParam(required = false, defaultValue = "10") @PositiveOrZero int size) {
         return client.getAllBookingsOfOwnerByState(ownerId, state, from, size);
     }
 }
