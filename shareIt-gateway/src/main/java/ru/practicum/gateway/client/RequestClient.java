@@ -16,7 +16,7 @@ public class RequestClient extends BaseClient {
 
     public Mono<ItemRequestDto> addItemRequest(Long userId, ItemRequestDto itemRequestDto) {
         return webClient.post()
-                .uri(baseUrl + REQUEST_URI)
+                .uri(String.format("%s%s", baseUrl, REQUEST_URI))
                 .bodyValue(itemRequestDto)
                 .header(USER_HEADER, userId.toString())
                 .exchangeToMono(response -> {
@@ -31,14 +31,14 @@ public class RequestClient extends BaseClient {
 
     public Mono<List<ItemRequestWithItemsDto>> getUsersRequestsWithItems(Long userId) {
         return webClient.get()
-                .uri(baseUrl + REQUEST_URI)
+                .uri(String.format("%s%s", baseUrl, REQUEST_URI))
                 .header(USER_HEADER, userId.toString())
                 .retrieve().bodyToFlux(ItemRequestWithItemsDto.class).collectList();
     }
 
     public Mono<ItemRequestWithItemsDto> getRequestByIdWithItems(Long userId, Long requestId) {
         return webClient.get()
-                .uri(baseUrl + REQUEST_URI + requestId)
+                .uri(String.format("%s%s%d", baseUrl, REQUEST_URI, requestId))
                 .header(USER_HEADER, userId.toString())
                 .exchangeToMono(response -> {
                     if (response.statusCode().isError()) {
@@ -53,7 +53,7 @@ public class RequestClient extends BaseClient {
     public Mono<List<ItemRequestWithItemsDto>> getAllRequestsOfOtherUsers(Long userId, int from, int size) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path(baseUrl + REQUEST_URI + "all")
+                        .path(String.format("%s%s%s", baseUrl, REQUEST_URI, "all"))
                         .queryParam("from", from)
                         .queryParam("size", size)
                         .build())

@@ -26,7 +26,7 @@ public class BookingClient extends BaseClient {
 
     public Mono<BookingResponseDto> addBooking(Long userId, BookingRequestDto bookingRequestDto) {
         return webClient.post()
-                .uri(baseUrl + BOOKING_URI)
+                .uri(String.format("%s%s", baseUrl, BOOKING_URI))
                 .bodyValue(bookingRequestDto)
                 .header(USER_HEADER, userId.toString())
                 .exchangeToMono(response -> {
@@ -42,7 +42,7 @@ public class BookingClient extends BaseClient {
     public Mono<BookingResponseDto> setBookingStatus(Long userId, Long id, Boolean approved) {
         return webClient.patch()
                 .uri(uriBuilder -> uriBuilder
-                        .path(baseUrl + BOOKING_URI + id)
+                        .path(String.format("%s%s%d", baseUrl, BOOKING_URI, id))
                         .queryParam("approved", approved)
                         .build())
                 .header(USER_HEADER, userId.toString())
@@ -58,7 +58,7 @@ public class BookingClient extends BaseClient {
 
     public Mono<BookingResponseDto> getBookingById(Long userId, Long id) {
         return webClient.get()
-                .uri(baseUrl + BOOKING_URI + id)
+                .uri(String.format("%s%s%d", baseUrl, BOOKING_URI, id))
                 .header(USER_HEADER, userId.toString())
                 .exchangeToMono(response -> {
                     if (response.statusCode().isError()) {
@@ -74,7 +74,7 @@ public class BookingClient extends BaseClient {
         checkStatus(state);
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path(baseUrl + BOOKING_URI)
+                        .path(String.format("%s%s", baseUrl, BOOKING_URI))
                         .queryParam("state", state)
                         .queryParam("from", from)
                         .queryParam("size", size)
@@ -87,7 +87,7 @@ public class BookingClient extends BaseClient {
         checkStatus(state);
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path(baseUrl + BOOKING_URI + "owner")
+                        .path(String.format("%s%s%s", baseUrl, BOOKING_URI, "owner"))
                         .queryParam("state", state)
                         .queryParam("from", from)
                         .queryParam("size", size)

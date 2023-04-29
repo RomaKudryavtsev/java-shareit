@@ -15,7 +15,7 @@ public class UserClient extends BaseClient {
 
     public Mono<User> addUser(User user) {
         return webClient.post()
-                .uri(baseUrl + USER_URI)
+                .uri(String.format("%s%s", baseUrl, USER_URI))
                 .bodyValue(user)
                 .exchangeToMono(response -> {
                     if (response.statusCode().isError()) {
@@ -29,7 +29,7 @@ public class UserClient extends BaseClient {
 
     public Mono<User> updateUser(Long userId, User user) {
         return webClient.patch()
-                .uri(baseUrl + USER_URI + userId)
+                .uri(String.format("%s%s%d", baseUrl, USER_URI, userId))
                 .bodyValue(user)
                 .exchangeToMono(response -> {
                     if (response.statusCode().isError()) {
@@ -43,7 +43,7 @@ public class UserClient extends BaseClient {
 
     public Mono<User> getUserById(Long userId) {
         return webClient.get()
-                .uri(baseUrl + USER_URI + userId)
+                .uri(String.format("%s%s%d", baseUrl, USER_URI, userId))
                 .exchangeToMono(response -> {
                     if (response.statusCode().isError()) {
                         return response.bodyToMono(String.class)
@@ -56,13 +56,13 @@ public class UserClient extends BaseClient {
 
     public Mono<List<User>> getAllUsers() {
         return webClient.get()
-                .uri(baseUrl + USER_URI)
+                .uri(String.format("%s%s", baseUrl, USER_URI))
                 .retrieve().bodyToFlux(User.class).collectList();
     }
 
     public Mono<Void> deleteUserById(Long userId) {
         return webClient.delete()
-                .uri(baseUrl + USER_URI + userId)
+                .uri(String.format("%s%s%d", baseUrl, USER_URI, userId))
                 .retrieve()
                 .onStatus(HttpStatus::isError, response -> response.bodyToMono(String.class)
                         .flatMap(errorBody -> Mono.error(new MonoException(errorBody, response.statusCode()))))
